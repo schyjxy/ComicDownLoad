@@ -14,19 +14,3 @@ C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.csproj.
 C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\httpdownload.exe.licenses
 C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\httpdownload.exe
 C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\httpdownload.pdb
-D:\My Document\Github\comicDownLoad\httpdownload\bin\Debug\httpdownload.exe.config
-D:\My Document\Github\comicDownLoad\httpdownload\bin\Debug\httpdownload.exe
-D:\My Document\Github\comicDownLoad\httpdownload\bin\Debug\httpdownload.pdb
-D:\My Document\Github\comicDownLoad\httpdownload\bin\Debug\ComicUi.pdb
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.ComicReader.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.ComicSelf.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.DownListBox.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.DownLoadForm.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.MainForm.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.Properties.AboutBox.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.Properties.Resources.resources
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.csproj.GenerateResource.cache
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\httpdownload.exe.licenses
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\httpdownload.exe
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\httpdownload.pdb
-D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.csprojResolveAssemblyReference.cache
