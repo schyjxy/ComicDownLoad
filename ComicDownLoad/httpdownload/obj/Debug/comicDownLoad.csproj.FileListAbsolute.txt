@@ -1,0 +1,94 @@
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\bin\Debug\httpdownload.exe.config
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\bin\Debug\httpdownload.exe
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\bin\Debug\httpdownload.pdb
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\bin\Debug\ComicUi.pdb
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.csprojResolveAssemblyReference.cache
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.ComicReader.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.ComicSelf.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.DownListBox.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.DownLoadForm.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.MainForm.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.Properties.AboutBox.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.Properties.Resources.resources
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.csproj.GenerateResource.Cache
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\httpdownload.exe.licenses
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\httpdownload.exe
+C:\Users\hang\Desktop\comicDownLoad\httpdownload\obj\Debug\httpdownload.pdb
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\httpdownload.exe.config
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\httpdownload.exe
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\httpdownload.pdb
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.ComicReader.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.ComicSelf.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.DownListBox.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.DownLoadForm.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.MainForm.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.Properties.AboutBox.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.Properties.Resources.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.csproj.GenerateResource.Cache
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\httpdownload.exe.licenses
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\httpdownload.exe
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\httpdownload.pdb
+D:\My Document\Github\comicDownLoad\httpdownload\obj\Debug\comicDownLoad.newTask.resources
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\RestSharp.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\RestSharp.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.csprojResolveAssemblyReference.cache
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Data.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Printing.v16.1.Core.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Data.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Printing.v16.1.Core.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.Data.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.Data.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.Data.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.Data.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.Printing.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.Printing.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.Printing.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.Printing.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Sparkline.v16.1.Core.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Utils.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraBars.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraEditors.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraGrid.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraLayout.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraNavBar.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraPrinting.v16.1.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Sparkline.v16.1.Core.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.Utils.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraBars.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraEditors.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraGrid.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraLayout.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraNavBar.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\DevExpress.XtraPrinting.v16.1.xml
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.Sparkline.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.Sparkline.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.Sparkline.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.Sparkline.v16.1.Core.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.Utils.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.Utils.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.Utils.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.Utils.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.XtraBars.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.XtraBars.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.XtraBars.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.XtraBars.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.XtraEditors.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.XtraEditors.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.XtraEditors.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.XtraEditors.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.XtraGrid.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.XtraGrid.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.XtraGrid.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.XtraGrid.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.XtraLayout.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.XtraLayout.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.XtraLayout.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.XtraLayout.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.XtraNavBar.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.XtraNavBar.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.XtraNavBar.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.XtraNavBar.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\de\DevExpress.XtraPrinting.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\es\DevExpress.XtraPrinting.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ja\DevExpress.XtraPrinting.v16.1.resources.dll
+D:\My Document\Github\ComicDownLoad\httpdownload\bin\Debug\ru\DevExpress.XtraPrinting.v16.1.resources.dll
