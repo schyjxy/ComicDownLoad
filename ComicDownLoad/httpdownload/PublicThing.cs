@@ -68,7 +68,6 @@ namespace comicDownLoad
         private Dictionary<string, string> m_finishedComics;
         protected List<string> xpathList;
 
-
         public PublicThing()
         {
             m_lastedUpdate = new Dictionary<string, string>();

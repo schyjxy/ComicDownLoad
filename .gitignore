@@ -264,3 +264,4 @@ __pycache__/
 #ฮาตฤบ๖ยิ
 obj/
 Release/
+*.exe
