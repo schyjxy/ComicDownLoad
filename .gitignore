@@ -210,6 +210,7 @@ Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
 
+
 # SQL Server files
 *.mdf
 *.ldf
@@ -259,3 +260,7 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+
+#ÎÒµÄºöÂÔ
+obj/
+Release/

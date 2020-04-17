@@ -118,43 +118,6 @@ namespace comicDownLoad
             return null;
         }
 
-        //public static System.Drawing.Image GetImage(string url)
-        //{
-        //    try
-        //    {
-        //        HttpWebRequest myrequest = WebRequest.Create(url) as HttpWebRequest;
-        //        myrequest.Accept = "image/webp,image/*,*/*;q=0.8";
-        //        myrequest.KeepAlive = true;
-        //        myrequest.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36";
-        //        myrequest.Method = "GET";
-        //        myrequest.Host = new Uri(url).Host;
-               
-        //        if (myrequest.Host == "imgn1.magentozh.com")
-        //            myrequest.Referer = "http://www.verydm.com/";
-
-        //        HttpWebResponse resp = (HttpWebResponse)myrequest.GetResponse();
-
-        //        if (resp.StatusCode == HttpStatusCode.OK)
-        //        {
-        //            Stream imgstream = resp.GetResponseStream();
-        //            return System.Drawing.Image.FromStream(imgstream);
-        //        }
-        //        else
-        //        {
-        //            return null;
-        //        }
-        //    }
-        //    catch (WebException ex)
-        //    {
-        //        return null;
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        return null;
-        //    }
-
-        //}
-
         public static string ReplacePunctuation(string sourceStr)
         {            
             sourceStr = sourceStr.Replace("&mdash;", "-");
