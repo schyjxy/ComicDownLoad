@@ -150,7 +150,6 @@
     <Compile Include="DownTask.cs" />
     <Compile Include="DecoderDistrution.cs" />
     <Compile Include="decoder\HanHanManhua.cs" />
-    <Compile Include="IComic.cs" />
     <Compile Include="decoder\JingMingYan.cs" />
     <Compile Include="JsonOperate.cs" />
     <Compile Include="MainForm.cs">
