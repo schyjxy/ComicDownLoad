@@ -58,7 +58,6 @@ namespace comicDownLoad
                 comicInfo.Description = mainNode.SelectSingleNode("//p[@class='comic_deCon_d']").InnerText.Trim();
             }
            
-
             collect = mainNode.SelectNodes("//ul[@id='chapter-list-1']/li/a");
             
             if (collect != null)
@@ -257,7 +256,7 @@ namespace comicDownLoad
 
             foreach (var i in arry)
             {
-                comic.ImageList.Add(i.ToString());
+                comic.ImageList.Add("http://img01.eshanyao.com/showImage.php?url="+ i.ToString());
             }
 
             comic.Count = comic.ImageList.Count;

@@ -1,8 +1,9 @@
 {
   "ExpandedNodes": [
     "",
-    "\\ComicDownLoad"
+    "\\ComicDownLoad",
+    "\\ComicDownLoad\\httpdownload"
   ],
-  "SelectedNode": "\\README.md",
+  "SelectedNode": "\\ComicDownLoad\\comicDownLoad.sln",
   "PreviewInSolutionExplorer": false
 }

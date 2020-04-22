@@ -14,14 +14,6 @@ using RestSharp;
 
 namespace comicDownLoad
 {
-
-    public class TwoTreeNode
-    {
-        public string data;
-        public TwoTreeNode leftChild;
-        public TwoTreeNode rightChild;
-    }
-
     class AnalyseTool
     {
         public static string HttpGet(string url)
@@ -35,8 +27,9 @@ namespace comicDownLoad
             request.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
 
             request.AddHeader("Cache-Control", "max-age=0");
-            request.AddHeader("Accept-Encoding", "gzip, deflate");
-            request.Timeout = 50000;
+            request.AddHeader("Referer", url);
+            //request.AddHeader("Accept-Encoding", "gzip, deflate");
+            request.Timeout = 5000;
             IRestResponse response = client.Execute(request);
 
             if (response.StatusCode == HttpStatusCode.OK)
@@ -50,6 +43,27 @@ namespace comicDownLoad
 
             return "";
         }
+
+
+        //public static string HttpGet(string url)
+        //{
+        //    string retString = "";
+        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+        //    request.Method = "GET";
+        //    request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+        //    request.Headers.Add("Cache-Control:max-age=0");
+        //    request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+        //    request.KeepAlive = false;
+        //    request.Timeout = 5000;
+        //    request.Host = new Uri(url).Host;
+        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //    Stream myResponseStream = response.GetResponseStream();
+        //    StreamReader reader = new StreamReader(myResponseStream);
+        //    retString = reader.ReadToEnd();
+        //    reader.Close();
+        //    myResponseStream.Close();
+        //    return retString;
+        //}
 
         public static string HttpGet(string Url, Encoding encode)//Http Get方法
         {
@@ -103,7 +117,11 @@ namespace comicDownLoad
             {
                 request.AddHeader("Referer", "http://www.verydm.com/");
             }
-            
+            else
+            {
+                //request.AddHeader("Referer", url);
+            }
+           
             IRestResponse response = client.Execute(request);
 
             if (response.StatusCode == HttpStatusCode.OK)

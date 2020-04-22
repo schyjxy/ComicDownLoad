@@ -265,3 +265,5 @@ __pycache__/
 obj/
 Release/
 *.exe
+ComicDownLoad/.vs
+ComicDownLoad/httpdownload/obj

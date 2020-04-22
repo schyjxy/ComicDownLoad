@@ -38,17 +38,16 @@
             this.删除该任务ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.filePanel = new System.Windows.Forms.Panel();
-            this.newDownBtn = new CCWin.SkinControl.SkinButton();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.proxyCheck = new System.Windows.Forms.CheckBox();
+            this.portTextBox = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.ipPortTextBox = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
             this.savePathTexb = new System.Windows.Forms.TextBox();
             this.saveBtn = new CCWin.SkinControl.SkinButton();
-            this.label2 = new System.Windows.Forms.Label();
-            this.ipPortTextBox = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.portTextBox = new System.Windows.Forms.TextBox();
-            this.proxyCheck = new System.Windows.Forms.CheckBox();
+            this.filePanel = new System.Windows.Forms.FlowLayoutPanel();
             this.skinContextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -139,7 +138,6 @@
             // tabPage1
             // 
             this.tabPage1.Controls.Add(this.filePanel);
-            this.tabPage1.Controls.Add(this.newDownBtn);
             this.tabPage1.Location = new System.Drawing.Point(4, 28);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
@@ -147,33 +145,6 @@
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "当前任务";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // filePanel
-            // 
-            this.filePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.filePanel.AutoScroll = true;
-            this.filePanel.Font = new System.Drawing.Font("宋体", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
-            this.filePanel.Location = new System.Drawing.Point(3, 0);
-            this.filePanel.Name = "filePanel";
-            this.filePanel.Size = new System.Drawing.Size(502, 207);
-            this.filePanel.TabIndex = 7;
-            // 
-            // newDownBtn
-            // 
-            this.newDownBtn.BackColor = System.Drawing.Color.Transparent;
-            this.newDownBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
-            this.newDownBtn.DownBack = global::comicDownLoad.Properties.Resources.newPushed;
-            this.newDownBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
-            this.newDownBtn.Location = new System.Drawing.Point(6, 213);
-            this.newDownBtn.MouseBack = global::comicDownLoad.Properties.Resources.newNormal;
-            this.newDownBtn.Name = "newDownBtn";
-            this.newDownBtn.NormlBack = global::comicDownLoad.Properties.Resources.newNormal;
-            this.newDownBtn.Size = new System.Drawing.Size(36, 36);
-            this.newDownBtn.TabIndex = 5;
-            this.newDownBtn.UseVisualStyleBackColor = false;
-            this.newDownBtn.Click += new System.EventHandler(this.newDownBtn_Click);
             // 
             // tabPage2
             // 
@@ -192,6 +163,53 @@
             this.tabPage2.TabIndex = 1;
             this.tabPage2.Text = "下载设置";
             this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // proxyCheck
+            // 
+            this.proxyCheck.AutoSize = true;
+            this.proxyCheck.Location = new System.Drawing.Point(260, 6);
+            this.proxyCheck.Name = "proxyCheck";
+            this.proxyCheck.Size = new System.Drawing.Size(80, 23);
+            this.proxyCheck.TabIndex = 7;
+            this.proxyCheck.Text = "启用代理";
+            this.proxyCheck.UseVisualStyleBackColor = true;
+            this.proxyCheck.CheckedChanged += new System.EventHandler(this.proxyCheck_CheckedChanged);
+            // 
+            // portTextBox
+            // 
+            this.portTextBox.Enabled = false;
+            this.portTextBox.Location = new System.Drawing.Point(120, 45);
+            this.portTextBox.Name = "portTextBox";
+            this.portTextBox.Size = new System.Drawing.Size(122, 25);
+            this.portTextBox.TabIndex = 6;
+            this.portTextBox.Text = "1080";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(53, 45);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(35, 19);
+            this.label3.TabIndex = 5;
+            this.label3.Text = "端口";
+            // 
+            // ipPortTextBox
+            // 
+            this.ipPortTextBox.Enabled = false;
+            this.ipPortTextBox.Location = new System.Drawing.Point(120, 6);
+            this.ipPortTextBox.Name = "ipPortTextBox";
+            this.ipPortTextBox.Size = new System.Drawing.Size(122, 25);
+            this.ipPortTextBox.TabIndex = 4;
+            this.ipPortTextBox.Text = "127.0.0.1";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(53, 9);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 19);
+            this.label2.TabIndex = 3;
+            this.label2.Text = "代理";
             // 
             // label1
             // 
@@ -226,52 +244,17 @@
             this.saveBtn.UseVisualStyleBackColor = false;
             this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
             // 
-            // label2
+            // filePanel
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(53, 9);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 19);
-            this.label2.TabIndex = 3;
-            this.label2.Text = "代理";
-            // 
-            // ipPortTextBox
-            // 
-            this.ipPortTextBox.Enabled = false;
-            this.ipPortTextBox.Location = new System.Drawing.Point(120, 6);
-            this.ipPortTextBox.Name = "ipPortTextBox";
-            this.ipPortTextBox.Size = new System.Drawing.Size(122, 25);
-            this.ipPortTextBox.TabIndex = 4;
-            this.ipPortTextBox.Text = "127.0.0.1";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(53, 45);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(35, 19);
-            this.label3.TabIndex = 5;
-            this.label3.Text = "端口";
-            // 
-            // portTextBox
-            // 
-            this.portTextBox.Enabled = false;
-            this.portTextBox.Location = new System.Drawing.Point(120, 45);
-            this.portTextBox.Name = "portTextBox";
-            this.portTextBox.Size = new System.Drawing.Size(122, 25);
-            this.portTextBox.TabIndex = 6;
-            this.portTextBox.Text = "1080";
-            // 
-            // proxyCheck
-            // 
-            this.proxyCheck.AutoSize = true;
-            this.proxyCheck.Location = new System.Drawing.Point(260, 6);
-            this.proxyCheck.Name = "proxyCheck";
-            this.proxyCheck.Size = new System.Drawing.Size(80, 23);
-            this.proxyCheck.TabIndex = 7;
-            this.proxyCheck.Text = "启用代理";
-            this.proxyCheck.UseVisualStyleBackColor = true;
-            this.proxyCheck.CheckedChanged += new System.EventHandler(this.proxyCheck_CheckedChanged);
+            this.filePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filePanel.AutoScroll = true;
+            this.filePanel.Location = new System.Drawing.Point(0, 0);
+            this.filePanel.Name = "filePanel";
+            this.filePanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.filePanel.Size = new System.Drawing.Size(510, 252);
+            this.filePanel.TabIndex = 6;
             // 
             // DownLoadForm
             // 
@@ -299,7 +282,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panel1;
-        private CCWin.SkinControl.SkinButton newDownBtn;
         private CCWin.SkinControl.SkinContextMenuStrip skinContextMenuStrip1;
         private System.Windows.Forms.ToolStripMenuItem 打开ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 删除ToolStripMenuItem;
@@ -312,12 +294,11 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox savePathTexb;
         private CCWin.SkinControl.SkinButton saveBtn;
-        private System.Windows.Forms.Panel filePanel;
         private System.Windows.Forms.TextBox portTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox ipPortTextBox;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.CheckBox proxyCheck;
-
+        private System.Windows.Forms.FlowLayoutPanel filePanel;
     }
 }

@@ -310,6 +310,7 @@ namespace comicDownLoad
                     case "veryDm": url = "http://www.veryimapp.com/index.php?r=comic/list&show=grid&sort=update"; break;
                     case "huhumanhua": url = "http://www.huhudm.com/comic/"; break;
                     case "manhuadui": url = "https://www.manhuadui.com/list/riben/"; break;
+                    case "mangabzName": url = "http://www.mangabz.com/manga-list/";break;
                 }
 
                 if (url.Length > 0)
@@ -404,6 +405,12 @@ namespace comicDownLoad
                 CheckBox check;
                 checkPanel.Controls.Clear();
 
+                if(comicInfo.URLDictionary == null)
+                {
+                    descLable.Text = "简介：" + "该漫画已经下架！";
+                    return;
+                }
+
                 foreach (var i in comicInfo.URLDictionary)
                 {
                     check = new CheckBox();
@@ -417,7 +424,7 @@ namespace comicDownLoad
                     }));
 
 
-                    if (x + check.Width + 5 > checkPanel.Width - check.Width - 10)//如果
+                    if (x + check.Width + 5 > checkPanel.Width - check.Width - 10)
                     {
                         x = 0;
                         y = y + check.Height + 20;
@@ -431,8 +438,7 @@ namespace comicDownLoad
                 runGif.Visible = false;
             }));
 
-           
-           
+                  
         }
 
         private void resultListView_DoubleClick(object sender, EventArgs e)//需要优化
@@ -454,7 +460,6 @@ namespace comicDownLoad
         public static string BitStringDeal(string data)
         {
             var ret = "";
-            var temp = "";
             var str = new StringBuilder();
             string source = Convert.ToString(Convert.ToInt32(data, 16), 2).PadLeft(16, '0');
 

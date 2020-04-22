@@ -364,6 +364,7 @@
     <None Include="Resources\logo.ico" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Debug\logo\logo_mangabz.png" />
     <Content Include="logo.ico" />
     <Content Include="manga_72px_1110350_easyicon.net.ico" />
     <None Include="Resources\delete.png" />

@@ -58,11 +58,11 @@
             this.downProgressBar.BarRadius = 8;
             this.downProgressBar.BarRadiusStyle = CCWin.SkinClass.RoundStyle.All;
             this.downProgressBar.ForeColor = System.Drawing.Color.Black;
-            this.downProgressBar.Location = new System.Drawing.Point(5, 22);
+            this.downProgressBar.Location = new System.Drawing.Point(12, 27);
             this.downProgressBar.Name = "downProgressBar";
             this.downProgressBar.Radius = 8;
             this.downProgressBar.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.downProgressBar.Size = new System.Drawing.Size(334, 16);
+            this.downProgressBar.Size = new System.Drawing.Size(339, 16);
             this.downProgressBar.TabIndex = 4;
             this.downProgressBar.TextFormat = CCWin.SkinControl.SkinProgressBar.TxtFormat.Proportion;
             this.downProgressBar.TrackBack = System.Drawing.Color.White;
@@ -96,7 +96,7 @@
             this.readBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.readBtn.DownBack = global::comicDownLoad.Properties.Resources.readSmall;
             this.readBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
-            this.readBtn.Location = new System.Drawing.Point(375, 14);
+            this.readBtn.Location = new System.Drawing.Point(384, 20);
             this.readBtn.MouseBack = global::comicDownLoad.Properties.Resources.redSmallHover;
             this.readBtn.Name = "readBtn";
             this.readBtn.NormlBack = global::comicDownLoad.Properties.Resources.readSmall;
@@ -112,7 +112,7 @@
             this.refreshBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.refreshBtn.DownBack = global::comicDownLoad.Properties.Resources.refresh;
             this.refreshBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
-            this.refreshBtn.Location = new System.Drawing.Point(345, 14);
+            this.refreshBtn.Location = new System.Drawing.Point(354, 20);
             this.refreshBtn.MouseBack = global::comicDownLoad.Properties.Resources.refresh_green;
             this.refreshBtn.Name = "refreshBtn";
             this.refreshBtn.NormlBack = global::comicDownLoad.Properties.Resources.refresh;
@@ -128,7 +128,7 @@
             this.openBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.openBtn.DownBack = global::comicDownLoad.Properties.Resources.file_hover;
             this.openBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
-            this.openBtn.Location = new System.Drawing.Point(403, 14);
+            this.openBtn.Location = new System.Drawing.Point(412, 20);
             this.openBtn.MouseBack = global::comicDownLoad.Properties.Resources.file_hover;
             this.openBtn.Name = "openBtn";
             this.openBtn.NormlBack = global::comicDownLoad.Properties.Resources.file;
@@ -139,12 +139,13 @@
             // 
             // deleteBtn
             // 
+            this.deleteBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.deleteBtn.BackColor = System.Drawing.Color.Transparent;
             this.deleteBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.deleteBtn.DownBack = global::comicDownLoad.Properties.Resources.delete;
             this.deleteBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
             this.deleteBtn.Image = global::comicDownLoad.Properties.Resources.delete;
-            this.deleteBtn.Location = new System.Drawing.Point(447, 14);
+            this.deleteBtn.Location = new System.Drawing.Point(454, 20);
             this.deleteBtn.MouseBack = global::comicDownLoad.Properties.Resources.delete;
             this.deleteBtn.Name = "deleteBtn";
             this.deleteBtn.NormlBack = null;
@@ -155,8 +156,7 @@
             // 
             // DownListBox
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
             this.Controls.Add(this.deleteBtn);
             this.Controls.Add(this.readBtn);
             this.Controls.Add(this.refreshBtn);
@@ -164,8 +164,9 @@
             this.Controls.Add(this.openBtn);
             this.Controls.Add(this.downProgressBar);
             this.Controls.Add(this.titleLabel);
+            this.DoubleBuffered = true;
             this.Name = "DownListBox";
-            this.Size = new System.Drawing.Size(476, 41);
+            this.Size = new System.Drawing.Size(484, 47);
             this.Click += new System.EventHandler(this.DownListBox_Click);
             this.Leave += new System.EventHandler(this.DownListBox_Leave);
             this.MouseEnter += new System.EventHandler(this.DownListBox_MouseEnter);

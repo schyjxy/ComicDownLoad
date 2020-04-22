@@ -15,7 +15,6 @@ namespace comicDownLoad
 {
     public partial class DownLoadForm : Form
     {
-        int panelPos = 0;
         DateTime time;
         NotifyIcon notify;
         List<DownListBox> downlistCollection = null;
@@ -141,6 +140,8 @@ namespace comicDownLoad
                 Task task = new Task(() =>
                 {
                     DownListBox downItem = null;
+                    List<DownListBox> downList;
+                    downList = new List<DownListBox>();
 
                     foreach (var i in downloadFile)
                     {
@@ -155,23 +156,20 @@ namespace comicDownLoad
                             return;
                         }
 
-                        if (filePanel.InvokeRequired)
+                        this.Invoke(new Action(() =>
                         {
-                            this.Invoke(new Action(() =>
-                            {
-                                downItem = SearchDownListBox(i.ComicName);
-                                downTask.SourceUrl = url;
-                                downItem.deleteEvent += downItem_deleteEvent;
-                                downItem.resumeDownLoadEvent += downItem_resumeDownLoadEvent;
-                                downItem.SetMaxPage(down.ImageList.Count);//下载最大值
-                                downItem.Title = i.ComicName;//漫画名字
-                                downItem.Location = new Point(0, panelPos);
-                                downItem.Pages = down.ImageList.Count;
-                                filePanel.Controls.Add(downItem);
-                            }));
-                        }
+                            filePanel.Controls.Add(downItem);
+                            downItem = SearchDownListBox(i.ComicName);
+                            downTask.SourceUrl = url;
+                            downItem.deleteEvent += downItem_deleteEvent;
+                            downItem.resumeDownLoadEvent += downItem_resumeDownLoadEvent;
+                            downItem.SetMaxPage(down.ImageList.Count);//下载最大值
+                            downItem.Title = i.ComicName;//漫画名字
+                            downItem.Pages = down.ImageList.Count;
+                        }));
+                    
 
-                        if(downlistCollection.Contains(downItem) == false)
+                        if (downlistCollection.Contains(downItem) == false)
                             downlistCollection.Add(downItem);//添加到控件集合
 
                         downTask.ComicName = i.ComicName;
@@ -184,16 +182,21 @@ namespace comicDownLoad
                         {
                             fullPath = i.SavePath + "\\" + i.ComicName + "\\";
                             Directory.CreateDirectory(i.SavePath + "\\" + i.ComicName + "\\");
-                        }
-                        
+                        }                    
+
                         downItem.FilePath = fullPath;
                         downTask.DownLoadPath = fullPath;
-                        time = DateTime.Now;
-                        downTask.DownLoadStart(startIndex);
-                        taskQueue.Add(downTask);
+                        downTask.DownLoadStart(startIndex);                                       
+                        taskQueue.Add(downTask);                    
                         AddDownRecord(downTask.ComicName, downTask.SourceUrl, downTask.DownLoadPath, downTask.ImageFiles.Count, 0, 0);//添加记录到数据库
-                        panelPos = panelPos + downItem.Height;
+                        downList.Add(downItem);
                     }
+
+                    this.Invoke(new Action(() =>
+                    {
+                        filePanel.Controls.AddRange(downList.ToArray());
+                    }));
+                    
                 });
 
                 task.Start();
@@ -249,7 +252,8 @@ namespace comicDownLoad
             DeleteComicDir(listBox.FilePath);
             DeleteDownRecord(listBox.Title);
             downlistCollection.Remove(listBox);
-            ReLoad();
+            filePanel.Controls.Remove(listBox);
+
         }
 
         void StopDownTask(string taskName)
@@ -317,7 +321,6 @@ namespace comicDownLoad
 
         private void ReLoad()
         {
-            panelPos = 0;
             filePanel.Controls.Clear();
             LoadDownLoadRecord();
         }
@@ -381,7 +384,6 @@ namespace comicDownLoad
             this.Hide();
         }
 
-
         private void LoadDownLoadRecord()
         {
             DateTime time = DateTime.Now;
@@ -392,6 +394,8 @@ namespace comicDownLoad
             time = DateTime.Now;
             operate.CloseDataBase();
 
+            List<DownListBox> itemList = new List<DownListBox>();
+
             foreach (var i in list)
             {
                 DownListBox downBox = new DownListBox();
@@ -399,15 +403,14 @@ namespace comicDownLoad
                 downBox.resumeDownLoadEvent += downItem_resumeDownLoadEvent;
                 downBox.SetMaxPage(i.PageCount);//下载最大值
                 downBox.Title = i.TaskName;//漫画名字
-                downBox.Location = new Point(0, panelPos);
                 downBox.Pages = i.PageCount;
                 downBox.CurrentPage = i.DownLoadProgress;
                 downBox.FilePath = i.Path;
-                filePanel.Controls.Add(downBox);
+                itemList.Add(downBox);
                 downlistCollection.Add(downBox);
-                panelPos = panelPos + downBox.Height;
             }
 
+            filePanel.Controls.AddRange(itemList.ToArray());        
             Console.WriteLine("绘制消耗时间:{0}", DateTime.Now.Subtract(time).Milliseconds);
            
         }

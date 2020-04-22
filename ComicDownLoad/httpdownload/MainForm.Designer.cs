@@ -48,7 +48,6 @@
             this.hanhanmanhua = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem18 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem19 = new DevExpress.XtraNavBar.NavBarItem();
-            this.veryDm = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem27 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem28 = new DevExpress.XtraNavBar.NavBarItem();
             this.kanmanhua = new DevExpress.XtraNavBar.NavBarGroup();
@@ -156,7 +155,6 @@
             this.jiu0ManHua,
             this.huhumanhua,
             this.hanhanmanhua,
-            this.veryDm,
             this.kanmanhua,
             this.k886});
             this.comicNavBar.Items.AddRange(new DevExpress.XtraNavBar.NavBarItem[] {
@@ -296,15 +294,6 @@
             // 
             this.navBarItem19.Caption = "分类";
             this.navBarItem19.Name = "navBarItem19";
-            // 
-            // veryDm
-            // 
-            this.veryDm.Caption = "非常爱漫";
-            this.veryDm.Expanded = true;
-            this.veryDm.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem27),
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem28)});
-            this.veryDm.Name = "veryDm";
             // 
             // navBarItem27
             // 
@@ -1043,7 +1032,6 @@
         private DevExpress.XtraNavBar.NavBarItem navBarItem25;
         private DevExpress.XtraNavBar.NavBarItem navBarItem26;
         private DevExpress.XtraNavBar.NavBarItem navBarItem24;
-        private DevExpress.XtraNavBar.NavBarGroup veryDm;
         private DevExpress.XtraNavBar.NavBarItem navBarItem27;
         private DevExpress.XtraNavBar.NavBarItem navBarItem28;
         private System.Windows.Forms.RadioButton veryDmCheck;
