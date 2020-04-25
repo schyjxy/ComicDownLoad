@@ -18,7 +18,7 @@ namespace comicDownLoad
             BasicComicInfo basicComicInfo;
             HtmlNode mainNode = GetMainNode(response);
             Queue<BasicComicInfo> queue = new Queue<BasicComicInfo>();
-            HtmlNodeCollection nodes = mainNode.SelectNodes("//div[@class='manga-i-list-item']");
+            HtmlNodeCollection nodes = mainNode.SelectNodes("//div[@class='index-manga-item']");
 
             if(nodes != null)
             {
@@ -26,7 +26,7 @@ namespace comicDownLoad
                 {
                     basicComicInfo = new BasicComicInfo();
                     basicComicInfo.ComicHref = host + temp.SelectSingleNode("./a").Attributes["href"].Value;
-                    basicComicInfo.ComicName = temp.SelectSingleNode("./a").Attributes["title"].Value;
+                    basicComicInfo.ComicName = temp.SelectSingleNode("./p/a").InnerText;
                     basicComicInfo.ComicImgUrl = temp.SelectSingleNode("./a/img").Attributes["src"].Value;
                     queue.Enqueue(basicComicInfo);
                 }
@@ -39,23 +39,31 @@ namespace comicDownLoad
             ComicInfo comicInfo = new ComicInfo();
             HtmlNode mainNode = GetMainNode(response);
 
-            HtmlNode node = mainNode.SelectNodes("//span[@class='block']")[0];
-            comicInfo.Author = node.SelectSingleNode("./a/span").InnerText;
+            HtmlNode node = mainNode.SelectSingleNode("//p[@class='detail-info-tip']");
+            comicInfo.Author = node.SelectSingleNode("./span/a").InnerText;
+            comicInfo.HasFinished = node.SelectNodes("./span")[1].SelectSingleNode("./span").InnerText;
 
-            node = mainNode.SelectNodes("//span[@class='block']")[1];
-            comicInfo.HasFinished = mainNode.SelectSingleNode("//span[@class='detail-list-left']").InnerText;
-            comicInfo.Description = mainNode.SelectSingleNode("//p[@class='detail-main-content']").InnerText;
+            node = mainNode.SelectSingleNode("//p[@class='detail-info-content']");
+            if(node != null)
+            {
+                comicInfo.Description = node.InnerText;
+            }
+            else
+            {
+                comicInfo.Description = node.SelectNodes("./span")[2].SelectSingleNode("./span").InnerText;
+            }
+            
             comicInfo.URLDictionary = new Dictionary<string, string>();
 
-            HtmlNodeCollection htmlNodes = mainNode.SelectNodes("//div[@class='detail-list']/div/a");
+            HtmlNodeCollection htmlNodes = mainNode.SelectNodes("//div[@class='detail-list-form-con']/a");
 
             if (htmlNodes != null)
             {
                 foreach(HtmlNode temp in htmlNodes)
                 {
-                    string name = temp.InnerHtml.Trim();
+                    string name = temp.InnerText.Replace(" ", "");
 
-                    if(!comicInfo.URLDictionary.ContainsKey(name))
+                    if (!comicInfo.URLDictionary.ContainsKey(name))
                     {
                         comicInfo.URLDictionary.Add(name, host + temp.Attributes["href"].Value);
                     }
@@ -116,7 +124,7 @@ namespace comicDownLoad
         {
             DownLoadComic downLoad = new DownLoadComic();
             Regex urlRegex = new Regex(@"MANGABZ_CURL\s*=\s*""(?<data>[\w/]*)""");
-            Regex midRegex = new Regex(@"MANGABZ_COMIC_MID=(?<data>\d+)");
+            Regex midRegex = new Regex(@"MANGABZ_MID\s*=\s*(?<data>\d+)");
             Regex cidRegex = new Regex(@"MANGABZ_CID=(?<data>\d+)");
             Regex signRegex = new Regex(@"MANGABZ_VIEWSIGN=""(?<data>\w+)""");
             Regex dtRegex = new Regex(@"MANGABZ_VIEWSIGN_DT=""(?<data>[\w\s\-\:]*)""");

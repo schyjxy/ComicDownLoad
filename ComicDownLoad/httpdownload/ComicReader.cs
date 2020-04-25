@@ -21,7 +21,6 @@ namespace comicDownLoad
         private int m_Page;
         private int m_clientWidth;
         private int m_clientHeight;
-        private int m_posX;
         private int m_posY;//滚动Y轴记录位置
         private bool isAdd;
         private float t = 0;
@@ -65,6 +64,7 @@ namespace comicDownLoad
         private void AddLoadingGif()
         {
             gifBox = new GifBox();
+            gifBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             gifBox.Image = Properties.Resources.bycleLoad;
             gifBox.Width = gifBox.Image.Width;
             gifBox.Height = gifBox.Image.Height;
@@ -134,6 +134,11 @@ namespace comicDownLoad
             }
 
             FileUrl.Add(fileName);
+        }
+
+        private double EaseOutQuad(double x)
+        {
+            return 1 - (1 - x) * (1 - x);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -468,7 +473,6 @@ namespace comicDownLoad
 
         void timer_Tick(object sender, EventArgs e)
         {
-            int dat = Convert.ToInt32(Math.Abs(m_posY));
             float dt = 0.0f;
             dt = (sum * t + -sum * (t + 1)) / (t * t + 1);
 
@@ -481,12 +485,9 @@ namespace comicDownLoad
                 m_posY = m_posY + Convert.ToInt32(dt);
             }
 
-           // Console.WriteLine("sum值:{0},滚动位移:{1},t值:{2}", sum, dt, t);
-
             if (Math.Abs(dt) < 0.1)
             {
                 timer.Stop();
-               // Console.WriteLine("定时器停止");
                 sum = 0;
             }
 
@@ -522,8 +523,7 @@ namespace comicDownLoad
                 progressBar.Visible = false;
                 pageLabel.Visible = false;
                 menuTool.Visible = false;
-                fullScreenTool.Checked = true;
-                
+                fullScreenTool.Checked = true;            
             }
             else
             {
@@ -531,11 +531,11 @@ namespace comicDownLoad
                 this.WindowState = FormWindowState.Normal;
                 this.Width = 1280;
                 this.Height = 720;
-                //progressBar.Visible = true;
                 pageLabel.Visible = true;
                 fullScreenTool.Checked = false;
                 menuTool.Visible = true;
             }
+            
         }
 
         private void 全屏ToolStripMenuItem_Click(object sender, EventArgs e)

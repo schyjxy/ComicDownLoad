@@ -155,7 +155,7 @@ namespace comicDownLoad
 
                     if (dict.ContainsKey(key) == false)
                     {
-                        dict.Add(key, hostAttach + node.SelectSingleNode("./a").Attributes["href"].Value);
+                        dict.Add(key, node.SelectSingleNode("./a").Attributes["href"].Value);
                     }
                    
                 }
@@ -299,9 +299,10 @@ namespace comicDownLoad
             HtmlNode node = doc.DocumentNode.SelectSingleNode("//span[@id='k_total']");
             HtmlNodeCollection collect = doc.DocumentNode.SelectNodes("//div[@class='UnderPage']/div");
 
+            string html = "";
             string htmlData = "";
             string nextPage = "";
-            string html = "";
+            
             string baseHtml = collect[2].SelectSingleNode("./mip-link").Attributes["href"].Value;
 
             if (baseHtml.Contains("-"))
@@ -314,17 +315,27 @@ namespace comicDownLoad
             string imgUrl = collect[2].SelectSingleNode("./mip-link/mip-img").Attributes["src"].Value;
             list.Add(imgUrl);
 
+            DateTime time = DateTime.Now;
+          
+            List<string> urlList = new List<string>();
             for (int i = 2; i < total + 1; i++)
             {
                 nextPage = html + "-" + i + ".html";
-                htmlData = AnalyseTool.HttpGet(nextPage);
-                doc.LoadHtml(htmlData);
-                list.Add(doc.DocumentNode.SelectSingleNode("//mip-img").Attributes["src"].Value);
+                urlList.Add(nextPage);
             }
 
-            comic.ImageList = list;
-            comic.Count = list.Count;
-            return comic;
+           string[] responseArry = AnalyseTool.HttpGet(urlList.ToArray());
+           Console.WriteLine("获取所有访问耗时ms:{0}", DateTime.Now.Subtract(time).TotalMilliseconds);
+           
+           foreach(var i in responseArry)
+           {
+               doc.LoadHtml(i);
+               list.Add(doc.DocumentNode.SelectSingleNode("//mip-img").Attributes["src"].Value);
+           }
+
+           comic.ImageList = list;
+           comic.Count = list.Count;
+           return comic;
         }
 
     }

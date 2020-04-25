@@ -38,6 +38,7 @@
             this.删除该任务ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.filePanel = new System.Windows.Forms.FlowLayoutPanel();
             this.tabPage2 = new System.Windows.Forms.TabPage();
             this.proxyCheck = new System.Windows.Forms.CheckBox();
             this.portTextBox = new System.Windows.Forms.TextBox();
@@ -47,7 +48,6 @@
             this.label1 = new System.Windows.Forms.Label();
             this.savePathTexb = new System.Windows.Forms.TextBox();
             this.saveBtn = new CCWin.SkinControl.SkinButton();
-            this.filePanel = new System.Windows.Forms.FlowLayoutPanel();
             this.skinContextMenuStrip1.SuspendLayout();
             this.tabControl1.SuspendLayout();
             this.tabPage1.SuspendLayout();
@@ -146,6 +146,18 @@
             this.tabPage1.Text = "当前任务";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
+            // filePanel
+            // 
+            this.filePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.filePanel.AutoScroll = true;
+            this.filePanel.Location = new System.Drawing.Point(0, 0);
+            this.filePanel.Name = "filePanel";
+            this.filePanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
+            this.filePanel.Size = new System.Drawing.Size(510, 244);
+            this.filePanel.TabIndex = 6;
+            // 
             // tabPage2
             // 
             this.tabPage2.Controls.Add(this.proxyCheck);
@@ -243,18 +255,6 @@
             this.saveBtn.Text = "浏览";
             this.saveBtn.UseVisualStyleBackColor = false;
             this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
-            // 
-            // filePanel
-            // 
-            this.filePanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.filePanel.AutoScroll = true;
-            this.filePanel.Location = new System.Drawing.Point(0, 0);
-            this.filePanel.Name = "filePanel";
-            this.filePanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 2);
-            this.filePanel.Size = new System.Drawing.Size(510, 252);
-            this.filePanel.TabIndex = 6;
             // 
             // DownLoadForm
             // 

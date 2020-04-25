@@ -101,10 +101,10 @@ namespace comicDownLoad
                 htmlList.Add(html);
             }
 
-            foreach (var i in htmlList)
+            string[] responseArry = AnalyseTool.HttpGet(htmlList.ToArray());
+            foreach(var i in responseArry)
             {
-                retMsg = AnalyseTool.HttpGet(i);
-                urlList.Add(GetImageUrl(retMsg));
+                urlList.Add(GetImageUrl(i));
             }
 
             comic.ImageList = urlList;
@@ -274,7 +274,7 @@ namespace comicDownLoad
             input = input.Substring(0, input.Length - xi - 12);
             var k = sk.Substring(0, sk.Length - 1);
             var f = sk.Substring(sk.Length-1);
-            //
+
             for (int i = 0; i < k.Length; i++)
             {
                 input = input.Replace(k.Substring(i,1), i.ToString());

@@ -128,11 +128,11 @@
             this.openBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
             this.openBtn.DownBack = global::comicDownLoad.Properties.Resources.file_hover;
             this.openBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
-            this.openBtn.Location = new System.Drawing.Point(412, 20);
+            this.openBtn.Location = new System.Drawing.Point(414, 20);
             this.openBtn.MouseBack = global::comicDownLoad.Properties.Resources.file_hover;
             this.openBtn.Name = "openBtn";
             this.openBtn.NormlBack = global::comicDownLoad.Properties.Resources.file;
-            this.openBtn.Size = new System.Drawing.Size(38, 24);
+            this.openBtn.Size = new System.Drawing.Size(34, 24);
             this.openBtn.TabIndex = 5;
             this.openBtn.UseVisualStyleBackColor = false;
             this.openBtn.Click += new System.EventHandler(this.openBtn_Click);
@@ -145,7 +145,7 @@
             this.deleteBtn.DownBack = global::comicDownLoad.Properties.Resources.delete;
             this.deleteBtn.DrawType = CCWin.SkinControl.DrawStyle.Img;
             this.deleteBtn.Image = global::comicDownLoad.Properties.Resources.delete;
-            this.deleteBtn.Location = new System.Drawing.Point(454, 20);
+            this.deleteBtn.Location = new System.Drawing.Point(451, 20);
             this.deleteBtn.MouseBack = global::comicDownLoad.Properties.Resources.delete;
             this.deleteBtn.Name = "deleteBtn";
             this.deleteBtn.NormlBack = null;

@@ -44,10 +44,12 @@ namespace comicDownLoad
 
         public override ComicInfo GetComicInfo(string response)
         {
+            string desc = "";
             ComicInfo comicInfo = new ComicInfo();
             HtmlNode mainNode = GetMainNode(response);
             HtmlNode node = mainNode.SelectSingleNode("//ul[@class='comic_deCon_liO']");
             HtmlNodeCollection collect = node.SelectNodes("./li/a");
+            
 
             if (collect != null)
             {
@@ -55,7 +57,8 @@ namespace comicDownLoad
                 comicInfo.HasFinished = collect[1].InnerText;
                 comicInfo.Tag = collect[2].InnerText;
                 comicInfo.otherWork = hostName + collect[0].Attributes["href"].Value;
-                comicInfo.Description = mainNode.SelectSingleNode("//p[@class='comic_deCon_d']").InnerText.Trim();
+                desc = mainNode.SelectSingleNode("//p[@class='comic_deCon_d']").InnerText.Trim();
+                comicInfo.Description = desc.Substring(desc.IndexOf("：") + 1);
             }
            
             collect = mainNode.SelectNodes("//ul[@id='chapter-list-1']/li/a");
@@ -192,7 +195,14 @@ namespace comicDownLoad
             CategoryCollect cateCollect = new CategoryCollect();
             Queue<BasicComicInfo> queue = new Queue<BasicComicInfo>();
             HtmlNode mainNode = GetMainNode(cateGoryStr);
+            cateCollect.ComicQueue = queue;
             HtmlNode node = mainNode.SelectSingleNode("//ul[@class='list_con_li clearfix']");
+
+            if(node == null)
+            {
+                return cateCollect;
+            }
+
             HtmlNodeCollection collect = node.SelectNodes("./li");
 
             if (collect == null)
@@ -237,7 +247,7 @@ namespace comicDownLoad
             }
           
                  
-            cateCollect.ComicQueue = queue;
+            
             return cateCollect;
         }
 

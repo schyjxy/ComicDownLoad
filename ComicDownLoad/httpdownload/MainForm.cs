@@ -18,10 +18,9 @@ namespace comicDownLoad
         SqlOperate opt;
         DownLoadForm downForm;
         Resource resource;
-        ImageList showImageList;
+        ImageList showImageList;//图片集合
         PublicThing decoder;
-        string downLoadPath = "";
-        bool m_exitLoad = true;
+        bool m_exitLoad = true;//是否退出标识
         Dictionary<string, string> downUrlDic;
 
         delegate void downloadDlegate(Queue<string> url, string comicName);
@@ -34,6 +33,22 @@ namespace comicDownLoad
         public MainForm()
         {
             InitializeComponent();           
+        }
+
+        private void SetGifHidden()
+        {
+            runGif.Invoke(new Action(() =>
+            {
+                runGif.Visible = false;
+            }));
+        }
+
+        private void SetGifVisable()
+        {
+            runGif.Invoke(new Action(() =>
+            {
+                runGif.Visible = true;
+            }));
         }
 
         public void GetImagesList(object b)//获取批量图片
@@ -54,8 +69,10 @@ namespace comicDownLoad
                     m_exitLoad = false;
                     resultListView.Items.Clear();
                     showImageList.Images.Clear();
-                   view.ViewAdd.LargeImageList = showImageList;
+                    view.ViewAdd.LargeImageList = showImageList;
                 }));
+
+                DateTime time = DateTime.Now;
 
                 foreach (var i in queue)
                 {
@@ -66,7 +83,6 @@ namespace comicDownLoad
                         item = new ListViewItem();
                         item.Text = i.ComicName;
                         item.ImageIndex = count++;
-                        // Console.WriteLine("漫画名字:{0},图片索引:{1}", item.Text, item.ImageIndex);
                         this.Invoke(addItem, item, image, view.ViewAdd);
 
                         if (comicDic.ContainsKey(i.ComicName) == false)
@@ -78,23 +94,22 @@ namespace comicDownLoad
                     {
                         count = 0;
                         m_exitLoad = true;
+                        SetGifHidden();
                         return;
                     }                 
                 }
 
+                Console.WriteLine("轮询图像获取:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
                 m_exitLoad = true;
-                runGif.Invoke(new Action(() =>
-                {
-                    runGif.Visible = false;
-                }));
-                
+                SetGifHidden();
+
             }
-            
+         
         }
 
         private void ListViewItemAdd(ListViewItem item, Image image, ListView addView)
         {
-            if (image != null)
+            if (image != null && !m_exitLoad)
             {
                 showImageList.Images.Add(image);
                 addView.Items.Add(item);
@@ -103,24 +118,35 @@ namespace comicDownLoad
     
         private void DecodeCategory(string listUrl)//解析每一栏的标签页
         {
-            var msg = AnalyseTool.HttpGet(listUrl);
-            decoder = DecoderDistrution.GiveDecoder(listUrl);
-            decoder.BackUrl = listUrl;
-            var cateCollect = decoder.FindComicByCategory(msg);
-            resource.NextPage = cateCollect.NextPageUrl;
-            resource.LastPage = cateCollect.LastPageUrl;
-            progressBar1.Value = 0;
-            progressBar1.Maximum = cateCollect.ComicQueue.Count;
-            resultListView.Items.Clear();
-            ViewStruct view = new ViewStruct();
-            view.Queue = cateCollect.ComicQueue;
-            view.ViewAdd = resultListView;
+            Task task = new Task(() =>
+            {
+                var msg = AnalyseTool.HttpGet(listUrl);
+                decoder = DecoderDistrution.GiveDecoder(listUrl);
+                decoder.BackUrl = listUrl;
+                var cateCollect = decoder.FindComicByCategory(msg);
+                resource.NextPage = cateCollect.NextPageUrl;
+                resource.LastPage = cateCollect.LastPageUrl;
 
-            if (m_exitLoad == false)
-                m_exitLoad = true;
+                progressBar1.Invoke(new Action(() =>
+                {
+                    progressBar1.Value = 0;
+                    progressBar1.Maximum = cateCollect.ComicQueue.Count;
+                    resultListView.Items.Clear();
+                }));
+                
+                ViewStruct view = new ViewStruct();
+                view.Queue = cateCollect.ComicQueue;
+                view.ViewAdd = resultListView;
 
-            getThread = new Thread(new ParameterizedThreadStart(GetImagesList));
-            getThread.Start(view);      
+                if (m_exitLoad == false)
+                    m_exitLoad = true;
+
+                getThread = new Thread(new ParameterizedThreadStart(GetImagesList));
+                getThread.Start(view);
+            });
+            task.Start();
+
+            
         }
       
         private void AddProgress(ProgressBar pro1)
@@ -172,21 +198,7 @@ namespace comicDownLoad
         {
             #region 双击调用浏览器打开网页
             mainFrame.SelectedPageIndex = 0;
-            /*if (resourse.SearchResultURL.ContainsKey(resultListView.SelectedItems[0].Text))
-            {
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.FileName = @"D:\Program Files (x86)\360Chrome\Chrome\Application\360chrome.exe";
-                //startInfo.FileName = @"D:\临时\漫画\ComicsViewer_chn\ComicsViewer.exe";
-                startInfo.Arguments = resourse.SearchResultURL[resultListView.SelectedItems[0].Text];
-                //startInfo.Arguments = @"D:\我们是变态 001集\0.jpg";
-                Process.Start(startInfo);
-            }*/
             #endregion
-        }
-
-        private void button3_Click(object sender, EventArgs e)
-        {
-          
         }
       
         private void SetProgressBar(Queue<BasicComicInfo> queue)//设置进度条
@@ -213,7 +225,7 @@ namespace comicDownLoad
         {
             mainFrame.SelectedPageIndex = 0;
             tabControl1.TabPages.Clear();
-            runGif.Visible = true;
+            SetGifVisable();
 
             Task task = new Task(() =>
             {
@@ -223,10 +235,7 @@ namespace comicDownLoad
 
                     if (response == "")
                     {
-                        runGif.Invoke(new Action(() =>
-                        {
-                            runGif.Visible = false;
-                        }));
+                        SetGifHidden();
                         return;
                     }
                     var comicTop = comicDecoder.GetTopComic(response);
@@ -267,6 +276,7 @@ namespace comicDownLoad
                             tab = new DevExpress.XtraTab.XtraTabPage();
                             tab.Text = i.Key;
                             tabControl1.TabPages.Add(tab);
+
                             if (count++ > 15)
                                 break;
                         }
@@ -347,13 +357,6 @@ namespace comicDownLoad
                         HotComic(url, decoder);
                     }
                 }
-
-                if (e.Link.Caption == "推荐")
-                {
-                    url = "http://www.hhmmoo.com/comic/best_1.html";
-                    decoder = DecoderDistrution.GiveDecoder(url);
-                    HotComic(url, decoder);
-                }
             }
           
         }
@@ -372,6 +375,11 @@ namespace comicDownLoad
             int y = 0;
             var receive = "";
             var url = "";
+
+            if(selectView.SelectedItems == null)
+            {
+                return;
+            }
 
             this.Invoke(new Action(() =>
             {
@@ -394,15 +402,16 @@ namespace comicDownLoad
             var comicInfo = decoder.GetComicInfo(receive);
             downUrlDic = new Dictionary<string, string>();//存储当前漫画所有图片链接
             downUrlDic = comicInfo.URLDictionary;
-
+           
             this.Invoke(new Action(() =>
             {
+                CheckBox check;
                 comicPicBox.Image = showImageList.Images[selectView.SelectedItems[0].Index];
                 authorLab.Text = (comicInfo.Author == null || comicInfo.Author.Length == 0) ? "略" : comicInfo.Author;
                 tagLabe.Text = "标签：  " + comicInfo.Tag;
                 descLable.Text = "简介：" + comicInfo.Description;
                 statusLab.Text = "连载状态：" + comicInfo.HasFinished;
-                CheckBox check;
+                
                 checkPanel.Controls.Clear();
 
                 if(comicInfo.URLDictionary == null)
@@ -417,12 +426,7 @@ namespace comicDownLoad
                     check.AutoSize = true;
                     check.Text = i.Key;
                     check.Location = new Point(x, y);
-
-                    this.Invoke(new Action(() =>
-                    {
-                        checkPanel.Controls.Add(check);
-                    }));
-
+                    checkPanel.Controls.Add(check);
 
                     if (x + check.Width + 5 > checkPanel.Width - check.Width - 10)
                     {
@@ -435,16 +439,16 @@ namespace comicDownLoad
                     }
                 }
 
-                runGif.Visible = false;
+                SetGifHidden();                
             }));
-
-                  
+                
         }
 
         private void resultListView_DoubleClick(object sender, EventArgs e)//需要优化
         {
             m_exitLoad = true;
-            runGif.Visible = true;
+            SetGifVisable();
+            progressBar1.Value = 0;
 
             if (resultListView.SelectedItems[0].Text != null)
             {
@@ -454,35 +458,6 @@ namespace comicDownLoad
                 });
                 task.Start();
                 
-            }
-        }
-
-        public static string BitStringDeal(string data)
-        {
-            var ret = "";
-            var str = new StringBuilder();
-            string source = Convert.ToString(Convert.ToInt32(data, 16), 2).PadLeft(16, '0');
-
-            for (int i = source.Length-4; i >= 0; i = i - 4)
-            {
-                Console.WriteLine("i:{0}",i);
-                ret = source.Substring(i, 4);
-                str.Append(Convert.ToInt32(ret,2).ToString("X"));
-            }
-            return str.ToString();
-        }
-
-        public static byte[] ReadFully(Stream input)
-        {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
             }
         }
 
@@ -582,7 +557,7 @@ namespace comicDownLoad
             var url = "";
             var name = "";
             var keyWord = HttpUtility.UrlEncode(searchControl.Text, Encoding.UTF8);
-            RadioButton[] radio = { manhuaduiCheck, hanhanCheck, veryDmCheck, jiulingCheck};
+            RadioButton[] radio = { manhuaduiCheck, hanhanCheck, jiulingCheck};
             
             foreach (RadioButton r in radio)
             {
@@ -755,8 +730,13 @@ namespace comicDownLoad
                 resultListView.Items.Remove(i);
                 collectInfo = opt.SearchCollectByName(i.Text, resource.SearchResultURL[i.Text]);
                 resource.SearchResultURL.Remove(i.Text);
-                showImageList.Images[i.ImageIndex].Dispose();
-                showImageList.Images.RemoveAt(i.ImageIndex);
+
+                if (showImageList.Images.Count >= i.ImageIndex)
+                {
+                    showImageList.Images[i.ImageIndex].Dispose();
+                    showImageList.Images.RemoveAt(i.ImageIndex);
+                }
+
                 File.Delete(collectInfo.ImagePath);
                 opt.DeleteCollect(collectInfo);
             }
@@ -789,13 +769,22 @@ namespace comicDownLoad
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void button1_Click_1(object sender, EventArgs e)
         {
-            string url = "http://img.zzszs.com.cn/images/cover/201911/157372119860zkj5WlNps-8B4s.jpg";
-            AnalyseTool.GetImage(url);
+            Task task = new Task(() =>
+            {
+                while(true)
+                {
+                    string url = "http://www.mangabz.com";
+                    decoder = DecoderDistrution.GiveDecoder(url);
+                    HotComic(url, decoder);
+                    Thread.Sleep(1000 * 20);
+                }
+                
+            });
+            task.Start();
         }
-
-       }
+    }
 
     public class ViewStruct
     {

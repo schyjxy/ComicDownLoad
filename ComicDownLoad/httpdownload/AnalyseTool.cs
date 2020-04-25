@@ -10,60 +10,97 @@ using HtmlAgilityPack;
 using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.Drawing;
-using RestSharp;
+using System.Threading;
 
 namespace comicDownLoad
 {
     class AnalyseTool
     {
-        public static string HttpGet(string url)
+        static int imageCount = 0;
+        static Image[] imageArry;
+        static string[] responseArry;
+        static int urlCount = 0;
+        static object objLock = new object();
+        static AutoResetEvent getUrlEvent = new AutoResetEvent(false);
+        static AutoResetEvent getImageEvent = new AutoResetEvent(false);
+
+        class ImageInfo
         {
-            RestClient client = new RestClient(url);
-            client.UserAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36";
-            client.BaseHost = new Uri(url).Host;
-            RestRequest request = new RestRequest();
-            request.Method = Method.GET;
-            request.Resource = url;
-            request.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-
-            request.AddHeader("Cache-Control", "max-age=0");
-            request.AddHeader("Referer", url);
-            //request.AddHeader("Accept-Encoding", "gzip, deflate");
-            request.Timeout = 5000;
-            IRestResponse response = client.Execute(request);
-
-            if (response.StatusCode == HttpStatusCode.OK)
-            {
-                return response.Content;
-            }
-            else
-            {
-                Console.WriteLine("网路错误");
-            }
-
-            return "";
+            public int count;
+            public string url;
         }
 
+        class UrlInfo
+        {
+            public int count;
+            public string url;
+        }
 
-        //public static string HttpGet(string url)
-        //{
-        //    string retString = "";
-        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-        //    request.Method = "GET";
-        //    request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-        //    request.Headers.Add("Cache-Control:max-age=0");
-        //    request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
-        //    request.KeepAlive = false;
-        //    request.Timeout = 5000;
-        //    request.Host = new Uri(url).Host;
-        //    HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-        //    Stream myResponseStream = response.GetResponseStream();
-        //    StreamReader reader = new StreamReader(myResponseStream);
-        //    retString = reader.ReadToEnd();
-        //    reader.Close();
-        //    myResponseStream.Close();
-        //    return retString;
-        //}
+        public static string HttpGet(string Url)//Http Get方法
+        {
+            DateTime time = DateTime.Now;
+            string retString = "";
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+            request.Method = "GET";
+            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+            request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
+            request.Headers.Add("Cache-Control:max-age=0");
+            request.Headers.Add("Refer", Url);
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+            //request.KeepAlive = true;
+            request.Host = new Uri(Url).Host;
+            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            Stream myResponseStream = response.GetResponseStream();
+
+            switch (response.ContentEncoding)
+            {
+                case "gzip": retString = DecompressEncode.DecompressGzip(myResponseStream, Encoding.UTF8); break;
+                case "deflate": retString = DecompressEncode.DecompressDeflate(myResponseStream, Encoding.UTF8); break;
+                default: retString = DecompressEncode.NoCompress(myResponseStream, Encoding.UTF8); break;
+            }
+
+            //Console.WriteLine("Get请求耗时:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
+            return retString;
+        }
+
+        private static void GetHttp(object obj)
+        {
+            UrlInfo info = obj as UrlInfo;
+            string reponse = HttpGet(info.url);
+
+            lock (objLock)
+            {
+                responseArry[info.count] = reponse;
+                urlCount--;
+
+                if (urlCount == 0)
+                {
+                    getUrlEvent.Set();
+                }
+            }
+            
+           
+        }
+
+        public static string[] HttpGet(string[] urlArry)
+        {
+            responseArry = new string[urlArry.Length];
+            ThreadPool.SetMinThreads(50, 50);
+            ThreadPool.SetMaxThreads(100, 100);
+            urlCount = urlArry.Length;
+            UrlInfo info;
+
+            for (int i=0;i<urlArry.Length;i++)
+            {
+                info = new UrlInfo();
+                info.count = i;
+                info.url = urlArry[i];
+                ThreadPool.QueueUserWorkItem(GetHttp, info);
+            }
+
+            getUrlEvent.WaitOne();
+            return responseArry;
+        }
 
         public static string HttpGet(string Url, Encoding encode)//Http Get方法
         {
@@ -101,36 +138,84 @@ namespace comicDownLoad
             return retStr;
         }
 
-        public static Image GetImage(string url)
+        private static void DownImage(object obj)
         {
-            RestClient client = new RestClient();
-            client.UserAgent = "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/69.0.3497.100 Mobile Safari/537.36";
-            client.BaseHost = new Uri(url).Host;
-            RestRequest request = new RestRequest();
-            request.Method = Method.GET;
-            request.Resource = url;
-            request.AddHeader("Accept", "image/webp,image/*,*/*;q=0.8");
-            request.AddHeader("Cache-Control", "max-age=0");
-            request.AddHeader("Accept-Encoding", "gzip, deflate");
+            ImageInfo info = obj as ImageInfo;
+            Image img = GetImage(info.url);
 
-            if (client.BaseHost == "imgn1.magentozh.com")
+            if(img == null)
             {
-                request.AddHeader("Referer", "http://www.verydm.com/");
+                Console.WriteLine("图像为空");
             }
             else
             {
-                //request.AddHeader("Referer", url);
+                Console.WriteLine("图像下载成功");
             }
-           
-            IRestResponse response = client.Execute(request);
 
-            if (response.StatusCode == HttpStatusCode.OK)
+            imageArry[info.count] = img;
+            imageCount--;
+
+            if (imageCount == 0)
             {
-                MemoryStream memory = new MemoryStream();
-                memory.Write(response.RawBytes, 0, response.RawBytes.Length);
-                Image image =  Image.FromStream(memory);//Image没有释放
-                memory.Close();
-                return image;
+                getImageEvent.Set();
+            }
+        }
+
+        public static Image[] GetImage(string []url)//并发获取图片
+        {
+            imageCount = url.Length;
+            ThreadPool.SetMinThreads(10, 10);
+            ThreadPool.SetMinThreads(50, 50);
+
+            if(imageArry != null)
+            {
+                Array.Clear(imageArry, 0, imageArry.Length);
+            }
+
+            ImageInfo info;
+            imageArry = new Image[url.Length];
+
+            for (int i = 0;i < url.Length;i++)
+            {
+                info = new ImageInfo();
+                info.count = i;
+                info.url = url[i];            
+                ThreadPool.QueueUserWorkItem(DownImage, info);
+            }
+            
+            getImageEvent.WaitOne();
+            return imageArry;
+        }    
+
+        public static Image GetImage(string url)
+        {
+            DateTime time = DateTime.Now;
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.Method = "GET";
+            request.Accept = "image/webp,image/*,*/*;q=0.8";
+            request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
+            request.Headers.Add("Cache-Control:max-age=0");
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+            request.Host = new Uri(url).Host;
+
+            try
+            {
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream myResponseStream = response.GetResponseStream();
+
+                if (response.StatusCode == HttpStatusCode.OK)
+                {
+                    MemoryStream memory = new MemoryStream();
+                    myResponseStream.CopyTo(memory);
+                    Image image = Image.FromStream(memory);//Image没有释放
+                    memory.Close();
+                    //Console.WriteLine("Get获取图片耗时:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
+                    return image;
+                }
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("GetImage函数错误:{0}", ex.Message);
             }
 
             return null;
@@ -151,19 +236,6 @@ namespace comicDownLoad
             return sourceStr;
         }
 
-        private static bool CompareStr(string sourceStr, int index, string compareStr)
-        {
-            bool isSame = true;
-            for (int i = 0; i < compareStr.Length; i++)
-            {
-                if (sourceStr[i + index] != compareStr[i])
-                {
-                    isSame = false;
-                    break;
-                }
-            }
-            return isSame;
-        }
 
     }
 }

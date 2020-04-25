@@ -56,7 +56,7 @@ namespace comicDownLoad
             notify.Icon = new Icon("laba.ico");
             notify.Click += notify_Click;
             notify.Visible = true;
-            notify.ShowBalloonTip(1000, "通知", caption, ToolTipIcon.Info);
+            notify.ShowBalloonTip(1000, "下载完成", caption, ToolTipIcon.Info);
         }
 
         void notify_Click(object sender, EventArgs e)
@@ -150,9 +150,15 @@ namespace comicDownLoad
                         var response = AnalyseTool.HttpGet(url);
                         var down = decoder.GetDownImageList(response);//解析图片真实地址
 
+                        if(down == null)
+                        {
+                            MessageBox.Show("获取网页数据失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+
                         if (down.ImageList == null||down.Count == 0)
                         {
-                            MessageBox.Show("该漫画已经下架", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            MessageBox.Show("解析失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             return;
                         }
 
@@ -392,7 +398,7 @@ namespace comicDownLoad
             var list = operate.GetRecordList();
             Console.WriteLine("查找消耗时间:{0}", DateTime.Now.Subtract(time).Milliseconds);
             time = DateTime.Now;
-            operate.CloseDataBase();
+            operate.CloseDataBase();         
 
             List<DownListBox> itemList = new List<DownListBox>();
 

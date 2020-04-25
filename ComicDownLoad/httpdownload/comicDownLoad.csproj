@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>comicDownLoad</RootNamespace>
     <AssemblyName>httpdownload</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -85,9 +85,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>bin\Debug\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="RestSharp, Version=106.6.10.0, Culture=neutral, PublicKeyToken=598062e77f915f75, processorArchitecture=MSIL">
-      <HintPath>..\packages\RestSharp.106.6.10\lib\net452\RestSharp.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
@@ -152,6 +149,12 @@
     <Compile Include="decoder\HanHanManhua.cs" />
     <Compile Include="decoder\JingMingYan.cs" />
     <Compile Include="JsonOperate.cs" />
+    <Compile Include="LodingWidow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="LodingWidow.Designer.cs">
+      <DependentUpon>LodingWidow.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -187,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="DownLoadForm.resx">
       <DependentUpon>DownLoadForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LodingWidow.resx">
+      <DependentUpon>LodingWidow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.cs</DependentUpon>

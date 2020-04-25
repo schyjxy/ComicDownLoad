@@ -48,11 +48,6 @@
             this.hanhanmanhua = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem18 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem19 = new DevExpress.XtraNavBar.NavBarItem();
-            this.navBarItem27 = new DevExpress.XtraNavBar.NavBarItem();
-            this.navBarItem28 = new DevExpress.XtraNavBar.NavBarItem();
-            this.kanmanhua = new DevExpress.XtraNavBar.NavBarGroup();
-            this.navBarItem12 = new DevExpress.XtraNavBar.NavBarItem();
-            this.navBarItem13 = new DevExpress.XtraNavBar.NavBarItem();
             this.k886 = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem14 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem15 = new DevExpress.XtraNavBar.NavBarItem();
@@ -67,11 +62,15 @@
             this.navBarItem9 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem10 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem11 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem12 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem13 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem20 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem21 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem22 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem23 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem24 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem27 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem28 = new DevExpress.XtraNavBar.NavBarItem();
             this.jiuLingManHua = new DevExpress.XtraNavBar.NavBarItem();
             this.mainFrame = new DevExpress.XtraBars.Navigation.NavigationFrame();
             this.navigationPage2 = new DevExpress.XtraBars.Navigation.NavigationPage();
@@ -109,7 +108,6 @@
             this.runGif = new CCWin.SkinControl.GifBox();
             this.readerBtn = new CCWin.SkinControl.SkinButton();
             this.collectBtn = new CCWin.SkinControl.SkinButton();
-            this.veryDmCheck = new System.Windows.Forms.RadioButton();
             this.jiulingCheck = new System.Windows.Forms.RadioButton();
             this.button1 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.comicNavBar)).BeginInit();
@@ -155,7 +153,6 @@
             this.jiu0ManHua,
             this.huhumanhua,
             this.hanhanmanhua,
-            this.kanmanhua,
             this.k886});
             this.comicNavBar.Items.AddRange(new DevExpress.XtraNavBar.NavBarItem[] {
             this.navBarItem1,
@@ -295,39 +292,10 @@
             this.navBarItem19.Caption = "分类";
             this.navBarItem19.Name = "navBarItem19";
             // 
-            // navBarItem27
-            // 
-            this.navBarItem27.Caption = "热门";
-            this.navBarItem27.Name = "navBarItem27";
-            // 
-            // navBarItem28
-            // 
-            this.navBarItem28.Caption = "分类";
-            this.navBarItem28.Name = "navBarItem28";
-            // 
-            // kanmanhua
-            // 
-            this.kanmanhua.Caption = "";
-            this.kanmanhua.Expanded = true;
-            this.kanmanhua.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem12),
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem13)});
-            this.kanmanhua.Name = "kanmanhua";
-            this.kanmanhua.SmallImage = ((System.Drawing.Image)(resources.GetObject("kanmanhua.SmallImage")));
-            // 
-            // navBarItem12
-            // 
-            this.navBarItem12.Caption = "热门";
-            this.navBarItem12.Name = "navBarItem12";
-            // 
-            // navBarItem13
-            // 
-            this.navBarItem13.Caption = "分类";
-            this.navBarItem13.Name = "navBarItem13";
-            // 
             // k886
             // 
             this.k886.Caption = "";
+            this.k886.Expanded = true;
             this.k886.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem14),
             new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem15)});
@@ -399,6 +367,16 @@
             this.navBarItem11.Caption = "分类";
             this.navBarItem11.Name = "navBarItem11";
             // 
+            // navBarItem12
+            // 
+            this.navBarItem12.Caption = "热门";
+            this.navBarItem12.Name = "navBarItem12";
+            // 
+            // navBarItem13
+            // 
+            this.navBarItem13.Caption = "分类";
+            this.navBarItem13.Name = "navBarItem13";
+            // 
             // navBarItem20
             // 
             this.navBarItem20.Caption = "热门";
@@ -423,6 +401,16 @@
             // 
             this.navBarItem24.Caption = "navBarItem24";
             this.navBarItem24.Name = "navBarItem24";
+            // 
+            // navBarItem27
+            // 
+            this.navBarItem27.Caption = "热门";
+            this.navBarItem27.Name = "navBarItem27";
+            // 
+            // navBarItem28
+            // 
+            this.navBarItem28.Caption = "分类";
+            this.navBarItem28.Name = "navBarItem28";
             // 
             // jiuLingManHua
             // 
@@ -743,7 +731,7 @@
             // 
             this.manhuaduiCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.manhuaduiCheck.AutoSize = true;
-            this.manhuaduiCheck.Location = new System.Drawing.Point(703, 9);
+            this.manhuaduiCheck.Location = new System.Drawing.Point(875, 9);
             this.manhuaduiCheck.Name = "manhuaduiCheck";
             this.manhuaduiCheck.Size = new System.Drawing.Size(59, 16);
             this.manhuaduiCheck.TabIndex = 43;
@@ -755,7 +743,7 @@
             this.hanhanCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.hanhanCheck.AutoSize = true;
             this.hanhanCheck.Checked = true;
-            this.hanhanCheck.Location = new System.Drawing.Point(623, 9);
+            this.hanhanCheck.Location = new System.Drawing.Point(795, 9);
             this.hanhanCheck.Name = "hanhanCheck";
             this.hanhanCheck.Size = new System.Drawing.Size(71, 16);
             this.hanhanCheck.TabIndex = 41;
@@ -876,23 +864,11 @@
             this.collectBtn.UseVisualStyleBackColor = false;
             this.collectBtn.Click += new System.EventHandler(this.collectBtn_Click);
             // 
-            // veryDmCheck
-            // 
-            this.veryDmCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.veryDmCheck.AutoSize = true;
-            this.veryDmCheck.Location = new System.Drawing.Point(765, 9);
-            this.veryDmCheck.Name = "veryDmCheck";
-            this.veryDmCheck.Size = new System.Drawing.Size(71, 16);
-            this.veryDmCheck.TabIndex = 52;
-            this.veryDmCheck.TabStop = true;
-            this.veryDmCheck.Text = "非常爱漫";
-            this.veryDmCheck.UseVisualStyleBackColor = true;
-            // 
             // jiulingCheck
             // 
             this.jiulingCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.jiulingCheck.AutoSize = true;
-            this.jiulingCheck.Location = new System.Drawing.Point(845, 9);
+            this.jiulingCheck.Location = new System.Drawing.Point(940, 9);
             this.jiulingCheck.Name = "jiulingCheck";
             this.jiulingCheck.Size = new System.Drawing.Size(59, 16);
             this.jiulingCheck.TabIndex = 53;
@@ -902,13 +878,13 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(426, 621);
+            this.button1.Location = new System.Drawing.Point(405, 620);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 54;
-            this.button1.Text = "测试";
+            this.button1.Text = "暴力测试";
             this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // MainForm
             // 
@@ -918,7 +894,6 @@
             this.ClientSize = new System.Drawing.Size(1317, 662);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.jiulingCheck);
-            this.Controls.Add(this.veryDmCheck);
             this.Controls.Add(this.collectBtn);
             this.Controls.Add(this.readerBtn);
             this.Controls.Add(this.runGif);
@@ -998,7 +973,6 @@
         private DevExpress.XtraNavBar.NavBarItem navBarItem10;
         private DevExpress.XtraNavBar.NavBarItem navBarItem11;
         private CCWin.SkinControl.SkinButton downBtn;
-        private DevExpress.XtraNavBar.NavBarGroup kanmanhua;
         private DevExpress.XtraNavBar.NavBarItem navBarItem12;
         private DevExpress.XtraNavBar.NavBarItem navBarItem13;
         private DevExpress.XtraEditors.SearchControl searchControl;
@@ -1034,16 +1008,15 @@
         private DevExpress.XtraNavBar.NavBarItem navBarItem24;
         private DevExpress.XtraNavBar.NavBarItem navBarItem27;
         private DevExpress.XtraNavBar.NavBarItem navBarItem28;
-        private System.Windows.Forms.RadioButton veryDmCheck;
         private DevExpress.XtraNavBar.NavBarItem jiuLingManHua;
         private DevExpress.XtraNavBar.NavBarGroup jiu0ManHua;
         private DevExpress.XtraNavBar.NavBarItem navBarItem29;
         private DevExpress.XtraNavBar.NavBarItem navBarItem30;
         private System.Windows.Forms.RadioButton jiulingCheck;
-        private System.Windows.Forms.Button button1;
         private DevExpress.XtraNavBar.NavBarGroup mangabzName;
         private DevExpress.XtraNavBar.NavBarItem navBarItem31;
         private DevExpress.XtraNavBar.NavBarItem navBarItem32;
+        private System.Windows.Forms.Button button1;
     }
 }
 

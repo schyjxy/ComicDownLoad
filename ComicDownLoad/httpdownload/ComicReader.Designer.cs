@@ -312,6 +312,8 @@
             // 
             // tishiLabel
             // 
+            this.tishiLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tishiLabel.AutoSize = true;
             this.tishiLabel.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tishiLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
