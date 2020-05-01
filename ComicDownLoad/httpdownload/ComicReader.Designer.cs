@@ -48,8 +48,6 @@
             this.退出ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.historyMenu = new System.Windows.Forms.ToolStripMenuItem();
             this.bookMenulItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.图像PToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.拆分CToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于BToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.关于BToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tishiLabel = new System.Windows.Forms.Label();
@@ -206,7 +204,6 @@
             this.菜单MToolStripMenuItem,
             this.historyMenu,
             this.bookMenulItem,
-            this.图像PToolStripMenuItem,
             this.关于BToolStripMenuItem});
             this.menuTool.Location = new System.Drawing.Point(0, 0);
             this.menuTool.Name = "menuTool";
@@ -281,20 +278,6 @@
             this.bookMenulItem.Text = "书签(&B)";
             this.bookMenulItem.DropDownItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.bookMenulItem_DropDownItemClicked);
             // 
-            // 图像PToolStripMenuItem
-            // 
-            this.图像PToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.拆分CToolStripMenuItem});
-            this.图像PToolStripMenuItem.Name = "图像PToolStripMenuItem";
-            this.图像PToolStripMenuItem.Size = new System.Drawing.Size(59, 21);
-            this.图像PToolStripMenuItem.Text = "图像(&P)";
-            // 
-            // 拆分CToolStripMenuItem
-            // 
-            this.拆分CToolStripMenuItem.Name = "拆分CToolStripMenuItem";
-            this.拆分CToolStripMenuItem.Size = new System.Drawing.Size(116, 22);
-            this.拆分CToolStripMenuItem.Text = "拆分(&C)";
-            // 
             // 关于BToolStripMenuItem
             // 
             this.关于BToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -306,7 +289,7 @@
             // 关于BToolStripMenuItem1
             // 
             this.关于BToolStripMenuItem1.Name = "关于BToolStripMenuItem1";
-            this.关于BToolStripMenuItem1.Size = new System.Drawing.Size(116, 22);
+            this.关于BToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
             this.关于BToolStripMenuItem1.Text = "关于(&B)";
             this.关于BToolStripMenuItem1.Click += new System.EventHandler(this.关于BToolStripMenuItem1_Click);
             // 
@@ -368,8 +351,6 @@
         private System.Windows.Forms.ToolStripMenuItem autoWidth;
         private System.Windows.Forms.ToolStripMenuItem 原始比例IToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem historyMenu;
-        private System.Windows.Forms.ToolStripMenuItem 图像PToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem 拆分CToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem openDir;
         private System.Windows.Forms.ToolStripMenuItem 打开URLToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 退出ToolStripMenuItem;

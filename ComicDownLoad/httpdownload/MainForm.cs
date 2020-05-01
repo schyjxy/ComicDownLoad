@@ -40,6 +40,7 @@ namespace comicDownLoad
             runGif.Invoke(new Action(() =>
             {
                 runGif.Visible = false;
+                progressBar1.Visible = false;
             }));
         }
 
@@ -48,6 +49,7 @@ namespace comicDownLoad
             runGif.Invoke(new Action(() =>
             {
                 runGif.Visible = true;
+                progressBar1.Visible = true;
             }));
         }
 
@@ -99,7 +101,7 @@ namespace comicDownLoad
                     }                 
                 }
 
-                Console.WriteLine("轮询图像获取:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
+                //Console.WriteLine("轮询图像获取:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
                 m_exitLoad = true;
                 SetGifHidden();
 
@@ -164,6 +166,8 @@ namespace comicDownLoad
             showImageList.ImageSize = new Size(137, 174);
             showImageList.ColorDepth = ColorDepth.Depth32Bit;
             opt = new SqlOperate();
+            string url = "http://m.90mh.com/update/";
+            HotComic(url, DecoderDistrution.GiveDecoder(url));
         }
 
         private void DownComic(object sender, EventArgs e)
@@ -229,17 +233,24 @@ namespace comicDownLoad
 
             Task task = new Task(() =>
             {
-                lock (getLock)
+                try
                 {
-                    var response = AnalyseTool.HttpGet(url);
-
-                    if (response == "")
+                    lock (getLock)
                     {
-                        SetGifHidden();
-                        return;
+                        var response = AnalyseTool.HttpGet(url);
+
+                        if (response == "")
+                        {
+                            SetGifHidden();
+                            return;
+                        }
+                        var comicTop = comicDecoder.GetTopComic(response);
+                        SetProgressBar(comicTop);
                     }
-                    var comicTop = comicDecoder.GetTopComic(response);
-                    SetProgressBar(comicTop);
+                }
+                catch(Exception ex)
+                {
+
                 }
             });
 
@@ -255,46 +266,52 @@ namespace comicDownLoad
 
             Task task = new Task(() =>
             {
-                lock (getLock)
+                try
                 {
-                    var response = AnalyseTool.HttpGet(url);
-
-                    if (response == "")
+                    lock (getLock)
                     {
-                        MessageBox.Show("加载图片失败");
-                        return;
-                    }
+                        var response = AnalyseTool.HttpGet(url);
 
-                    tabControl1.Invoke(new Action(() =>
-                    {
-                        var cateInfo = comicDecoder.GiveCategoryInfo(response);
-                        tabControl1.TabPages.Clear();
-                        resource.CategoryCollect = cateInfo.ComicList;
-
-                        foreach (var i in cateInfo.ComicList)
+                        if (response == "")
                         {
-                            tab = new DevExpress.XtraTab.XtraTabPage();
-                            tab.Text = i.Key;
-                            tabControl1.TabPages.Add(tab);
-
-                            if (count++ > 15)
-                                break;
+                            MessageBox.Show("加载图片失败");
+                            return;
                         }
-                    }));
 
-                    if (resource.CategoryCollect.Count > 0)
-                    {
-                        var key = "";
-
-                        foreach (var i in resource.CategoryCollect)
+                        tabControl1.Invoke(new Action(() =>
                         {
-                            key = i.Key;
-                            break;
+                            var cateInfo = comicDecoder.GiveCategoryInfo(response);
+                            tabControl1.TabPages.Clear();
+                            resource.CategoryCollect = cateInfo.ComicList;
+
+                            foreach (var i in cateInfo.ComicList)
+                            {
+                                tab = new DevExpress.XtraTab.XtraTabPage();
+                                tab.Text = i.Key;
+                                tabControl1.TabPages.Add(tab);
+
+                                if (count++ > 15)
+                                    break;
+                            }
+                        }));
+
+                        if (resource.CategoryCollect.Count > 0)
+                        {
+                            var key = "";
+
+                            foreach (var i in resource.CategoryCollect)
+                            {
+                                key = i.Key;
+                                break;
+                            }
                         }
                     }
                 }
+                catch
+                {
 
-              
+                }
+                           
             });
 
             task.Start();                 
@@ -371,8 +388,6 @@ namespace comicDownLoad
 
         private void FillComicInfo(ListView selectView)
         {         
-            int x = 0;
-            int y = 0;
             var receive = "";
             var url = "";
 
@@ -410,8 +425,7 @@ namespace comicDownLoad
                 authorLab.Text = (comicInfo.Author == null || comicInfo.Author.Length == 0) ? "略" : comicInfo.Author;
                 tagLabe.Text = "标签：  " + comicInfo.Tag;
                 descLable.Text = "简介：" + comicInfo.Description;
-                statusLab.Text = "连载状态：" + comicInfo.HasFinished;
-                
+                statusLab.Text = "连载状态：" + comicInfo.HasFinished;          
                 checkPanel.Controls.Clear();
 
                 if(comicInfo.URLDictionary == null)
@@ -420,25 +434,17 @@ namespace comicDownLoad
                     return;
                 }
 
+                List<CheckBox> list = new List<CheckBox>();
+
                 foreach (var i in comicInfo.URLDictionary)
                 {
                     check = new CheckBox();
                     check.AutoSize = true;
                     check.Text = i.Key;
-                    check.Location = new Point(x, y);
-                    checkPanel.Controls.Add(check);
-
-                    if (x + check.Width + 5 > checkPanel.Width - check.Width - 10)
-                    {
-                        x = 0;
-                        y = y + check.Height + 20;
-                    }
-                    else
-                    {
-                        x = x + check.Width + 5;
-                    }
+                    list.Add(check);
+                    
                 }
-
+                checkPanel.Controls.AddRange(list.ToArray());
                 SetGifHidden();                
             }));
                 
@@ -568,7 +574,7 @@ namespace comicDownLoad
                 }
             }
 
-            runGif.Visible = true;
+            SetGifVisable();
 
             Task task = new Task(() =>
             {
@@ -626,7 +632,6 @@ namespace comicDownLoad
 
         private void startReadBtn_Click(object sender, EventArgs e)
         {
-
             DownLoadFile downFile = null ;
             DownTask downTask;
             ComicReader reader = new ComicReader();
@@ -723,22 +728,32 @@ namespace comicDownLoad
 
         private void reamoveCollect_Click(object sender, EventArgs e)
         {
-            SqlOperate.CollectStruct collectInfo;
-
-            foreach (ListViewItem i in resultListView.SelectedItems)
+            try
             {
-                resultListView.Items.Remove(i);
-                collectInfo = opt.SearchCollectByName(i.Text, resource.SearchResultURL[i.Text]);
-                resource.SearchResultURL.Remove(i.Text);
+                SqlOperate.CollectStruct collectInfo;
 
-                if (showImageList.Images.Count >= i.ImageIndex)
+                foreach (ListViewItem i in resultListView.SelectedItems)
                 {
-                    showImageList.Images[i.ImageIndex].Dispose();
-                    showImageList.Images.RemoveAt(i.ImageIndex);
-                }
+                    resultListView.Items.Remove(i);
+                    collectInfo = opt.SearchCollectByName(i.Text, resource.SearchResultURL[i.Text]);
+                    resource.SearchResultURL.Remove(i.Text);
 
-                File.Delete(collectInfo.ImagePath);
-                opt.DeleteCollect(collectInfo);
+                    if (showImageList.Images.Count >= i.ImageIndex)
+                    {
+                        showImageList.Images[i.ImageIndex].Dispose();
+                        showImageList.Images.RemoveAt(i.ImageIndex);
+                    }
+
+                    if (collectInfo.ImagePath != null)
+                    {
+                        File.Delete(collectInfo.ImagePath);
+                        opt.DeleteCollect(collectInfo);
+                    }
+                }
+            }
+            catch
+            {
+
             }
         }
 
@@ -769,20 +784,42 @@ namespace comicDownLoad
             }
         }
 
+        private void ShowWait()
+        {
+            LodingWidow lodingWidow = new LodingWidow();
+            lodingWidow.Location = new Point(this.Width/2, this.Height/2);
+            lodingWidow.TopLevel = false;
+            lodingWidow.Show();
+            //lodingWidow.ShowDialog();
+            this.Controls.Add(lodingWidow);
+        }
+
         private void button1_Click_1(object sender, EventArgs e)
         {
-            Task task = new Task(() =>
-            {
-                while(true)
-                {
-                    string url = "http://www.mangabz.com";
-                    decoder = DecoderDistrution.GiveDecoder(url);
-                    HotComic(url, decoder);
-                    Thread.Sleep(1000 * 20);
-                }
-                
-            });
-            task.Start();
+            //Task task = new Task(() =>
+            //{
+            //    while(true)
+            //    {
+            //        string url = "http://www.mangabz.com";
+            //        decoder = DecoderDistrution.GiveDecoder(url);
+            //        HotComic(url, decoder);
+            //        Thread.Sleep(1000 * 20);
+            //    }
+
+            //});
+            //task.Start();
+
+            //string url = "http://www.mangabz.com/m10344/";
+            //url = "http://www.mangabz.com/m115462/";
+            //var response = AnalyseTool.HttpGet(url);
+            //PublicThing decoder = DecoderDistrution.GiveDecoder(url);      
+            //decoder.GetDownImageList(response);
+            ShowWait();
+        }
+
+        private void manhuaduiCheck_CheckedChanged(object sender, EventArgs e)
+        {
+
         }
     }
 

@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using System.Security.Cryptography.X509Certificates;
 using System.Drawing;
 using System.Threading;
+using Microsoft.JScript;
+using Microsoft.JScript.Vsa;
 
 namespace comicDownLoad
 {
@@ -36,27 +38,43 @@ namespace comicDownLoad
             public string url;
         }
 
-        public static string HttpGet(string Url)//Http Get方法
+        public static string HttpGet(string Url, string refer = null)//Http Get方法
         {
-            DateTime time = DateTime.Now;
             string retString = "";
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
-            request.Method = "GET";
-            request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-            request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
-            request.Headers.Add("Cache-Control:max-age=0");
-            request.Headers.Add("Refer", Url);
-            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
-            //request.KeepAlive = true;
-            request.Host = new Uri(Url).Host;
-            HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-            Stream myResponseStream = response.GetResponseStream();
-
-            switch (response.ContentEncoding)
+            try
             {
-                case "gzip": retString = DecompressEncode.DecompressGzip(myResponseStream, Encoding.UTF8); break;
-                case "deflate": retString = DecompressEncode.DecompressDeflate(myResponseStream, Encoding.UTF8); break;
-                default: retString = DecompressEncode.NoCompress(myResponseStream, Encoding.UTF8); break;
+                DateTime time = DateTime.Now;
+                
+                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+                request.Method = "GET";
+                //request.Accept = "*/*";
+                request.UseDefaultCredentials = true;
+                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+                request.Host = new Uri(Url).Host;
+                request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
+                request.Headers.Add("Cache-Control:max-age=0");
+                request.ServicePoint.Expect100Continue = false;
+                request.Timeout = 3000;
+
+                if(refer != null)
+                    request.Referer = refer;
+
+                request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+                request.KeepAlive = true;
+
+                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+                Stream myResponseStream = response.GetResponseStream();
+
+                switch (response.ContentEncoding)
+                {
+                    case "gzip": retString = DecompressEncode.DecompressGzip(myResponseStream, Encoding.UTF8); break;
+                    case "deflate": retString = DecompressEncode.DecompressDeflate(myResponseStream, Encoding.UTF8); break;
+                    default: retString = DecompressEncode.NoCompress(myResponseStream, Encoding.UTF8); break;
+                }
+            }
+            catch(Exception ex)
+            {
+                return retString;
             }
 
             //Console.WriteLine("Get请求耗时:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
@@ -70,6 +88,11 @@ namespace comicDownLoad
 
             lock (objLock)
             {
+                if (reponse == "")
+                {
+                    reponse = HttpGet(info.url);
+                }
+
                 responseArry[info.count] = reponse;
                 urlCount--;
 
@@ -77,9 +100,24 @@ namespace comicDownLoad
                 {
                     getUrlEvent.Set();
                 }
-            }
-            
+            }            
            
+        }
+
+        public static ArrayObject EvalJScript(string JScript)
+        {
+            VsaEngine Engine = VsaEngine.CreateEngine();
+
+            ArrayObject Result = null;
+            try
+            {
+                Result = Microsoft.JScript.Eval.JScriptEvaluate(JScript, Engine) as ArrayObject;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+            return Result;
         }
 
         public static string[] HttpGet(string[] urlArry)

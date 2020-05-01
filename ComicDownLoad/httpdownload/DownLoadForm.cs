@@ -16,15 +16,24 @@ namespace comicDownLoad
     public partial class DownLoadForm : Form
     {
         DateTime time;
-        NotifyIcon notify;
         List<DownListBox> downlistCollection = null;
         List<DownTask> taskQueue;
+        NotifyIcon notify;
 
         public DownLoadForm()
         {
             InitializeComponent();
             downlistCollection = new List<DownListBox>();
             taskQueue = new List<DownTask>();
+            notify = new NotifyIcon();
+            notify.Icon = new Icon("laba.ico");
+            notify.Click += notify_Click;
+            notify.BalloonTipClosed += Notify_BalloonTipClosed;
+        }
+
+        private void Notify_BalloonTipClosed(object sender, EventArgs e)
+        {
+            //notify.Visible = false;
         }
 
         private void DownOnePicFinsihed(object sender, DownLoadArgs args)
@@ -52,16 +61,13 @@ namespace comicDownLoad
 
         private void ShowMessage(string caption)//展示通知信息
         {
-            notify = new NotifyIcon();
-            notify.Icon = new Icon("laba.ico");
-            notify.Click += notify_Click;
             notify.Visible = true;
             notify.ShowBalloonTip(1000, "下载完成", caption, ToolTipIcon.Info);
         }
 
         void notify_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("你点击了");
+            
         }
 
         private void DownAllFinished(object sender, DownLoadArgs args)
@@ -70,6 +76,7 @@ namespace comicDownLoad
             SqlOperate operate = new SqlOperate();
             operate.CreateOrOpenDataBase("task.db");
             operate.UpdateData("isFinished", "1", args.TaskName);
+
             this.Invoke(new Action(() =>
             {
                 this.Text = caption;
@@ -79,6 +86,7 @@ namespace comicDownLoad
             ShowMessage(caption);
         }
 
+        //添加下载记录
         private void AddDownRecord(string TaskName, string downLoadUrl, string savePath, int pageCount, int progress, int finished)
         {
             SqlOperate operate = new SqlOperate();
@@ -87,6 +95,7 @@ namespace comicDownLoad
             operate.CloseDataBase();
         }
 
+        //删除记录
         private void DeleteDownRecord(string TaskName)
         {
             SqlOperate operate = new SqlOperate();
@@ -109,15 +118,6 @@ namespace comicDownLoad
             ShowMessage(caption);
         }
 
-        private List<ResumeTask> CheckIfAllDownFinished(List<DownLoadFile> downloadFile)//判断是否存在该任务
-        {
-            SqlOperate operate = new SqlOperate();
-            operate.CreateOrOpenDataBase("task.db");
-            var list = operate.CheckDownFinished("task");
-            operate.CloseDataBase();
-            return list;
-        }
-
         private DownListBox SearchDownListBox(string name)
         {
             foreach (var i in downlistCollection)
@@ -127,8 +127,14 @@ namespace comicDownLoad
                     return i;
                 }
             }
-
             return new DownListBox();
+        }
+
+        private void ShowBallTip(string text, string title)
+        {
+            notify.Visible = false;
+            notify.Visible = true;
+            notify.ShowBalloonTip(1000, title, text, ToolTipIcon.Info);
         }
 
         private void StartNewDownLoad(List<DownLoadFile> downloadFile, PublicThing decoder, int startIndex = 0)//开始全新下载
@@ -136,35 +142,38 @@ namespace comicDownLoad
             var fullPath = "";           
           
             try
-            {                
+            {
+                
                 Task task = new Task(() =>
                 {
                     DownListBox downItem = null;
                     List<DownListBox> downList;
                     downList = new List<DownListBox>();
+                    ShowBallTip("正在解析，请稍等！", "提示");
 
                     foreach (var i in downloadFile)
                     {
                         DownTask downTask = new DownTask();
                         var url = i.ComicUrl;
                         var response = AnalyseTool.HttpGet(url);
+                        decoder.currentUrl = url;
+
+                        if(response == "")
+                        {
+                            MessageBox.Show("下载时获取网页错误", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            return;
+                        }
+
                         var down = decoder.GetDownImageList(response);//解析图片真实地址
 
-                        if(down == null)
+                        if(down == null || down.ImageList == null || down.Count == 0)
                         {
                             MessageBox.Show("获取网页数据失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             return;
                         }
 
-                        if (down.ImageList == null||down.Count == 0)
-                        {
-                            MessageBox.Show("解析失败", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                            return;
-                        }
-
                         this.Invoke(new Action(() =>
-                        {
-                            filePanel.Controls.Add(downItem);
+                        {                           
                             downItem = SearchDownListBox(i.ComicName);
                             downTask.SourceUrl = url;
                             downItem.deleteEvent += downItem_deleteEvent;
@@ -172,6 +181,7 @@ namespace comicDownLoad
                             downItem.SetMaxPage(down.ImageList.Count);//下载最大值
                             downItem.Title = i.ComicName;//漫画名字
                             downItem.Pages = down.ImageList.Count;
+                            filePanel.Controls.Add(downItem);
                         }));
                     
 
@@ -198,11 +208,7 @@ namespace comicDownLoad
                         downList.Add(downItem);
                     }
 
-                    this.Invoke(new Action(() =>
-                    {
-                        filePanel.Controls.AddRange(downList.ToArray());
-                    }));
-                    
+                    ShowBallTip("解析完成，开始下载！", "提示");
                 });
 
                 task.Start();
@@ -259,7 +265,6 @@ namespace comicDownLoad
             DeleteDownRecord(listBox.Title);
             downlistCollection.Remove(listBox);
             filePanel.Controls.Remove(listBox);
-
         }
 
         void StopDownTask(string taskName)
@@ -361,8 +366,6 @@ namespace comicDownLoad
 
         private void newDownBtn_Click(object sender, EventArgs e)//新建下载
         {
-            //newTask newTask = new newTask();
-            //newTask.Show();
             DownListBox listBox = new DownListBox();
             listBox.deleteEvent += downItem_deleteEvent;
             filePanel.Controls.Add(listBox);

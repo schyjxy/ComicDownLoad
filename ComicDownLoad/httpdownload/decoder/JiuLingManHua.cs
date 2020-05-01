@@ -318,6 +318,7 @@ namespace comicDownLoad
             DateTime time = DateTime.Now;
           
             List<string> urlList = new List<string>();
+
             for (int i = 2; i < total + 1; i++)
             {
                 nextPage = html + "-" + i + ".html";
@@ -329,6 +330,10 @@ namespace comicDownLoad
            
            foreach(var i in responseArry)
            {
+                if(i == "")
+                {
+                    return comic;
+                }
                doc.LoadHtml(i);
                list.Add(doc.DocumentNode.SelectSingleNode("//mip-img").Attributes["src"].Value);
            }

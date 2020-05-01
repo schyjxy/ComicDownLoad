@@ -83,6 +83,7 @@
             this.downnLoadTool = new System.Windows.Forms.ToolStripMenuItem();
             this.fullChoiceTool = new System.Windows.Forms.ToolStripMenuItem();
             this.unChoiceTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.checkPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.addFavrourate = new CCWin.SkinControl.SkinButton();
             this.startReadBtn = new CCWin.SkinControl.SkinButton();
             this.label1 = new System.Windows.Forms.Label();
@@ -92,7 +93,6 @@
             this.tagLabe = new System.Windows.Forms.Label();
             this.statusLab = new System.Windows.Forms.Label();
             this.comicNameLabel = new System.Windows.Forms.Label();
-            this.checkPanel = new System.Windows.Forms.Panel();
             this.comicPicBox = new DevExpress.XtraEditors.PictureEdit();
             this.navigationPage3 = new DevExpress.XtraBars.Navigation.NavigationPage();
             this.searchListView = new comicDownLoad.DoublebufferListview();
@@ -127,7 +127,7 @@
             // progressBar1
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.progressBar1.Location = new System.Drawing.Point(293, 626);
+            this.progressBar1.Location = new System.Drawing.Point(307, 623);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(81, 16);
             this.progressBar1.TabIndex = 12;
@@ -451,9 +451,9 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.resultListView.ContextMenuStrip = this.Collectcontext;
-            this.resultListView.Location = new System.Drawing.Point(3, 39);
+            this.resultListView.Location = new System.Drawing.Point(0, 39);
             this.resultListView.Name = "resultListView";
-            this.resultListView.Size = new System.Drawing.Size(1056, 525);
+            this.resultListView.Size = new System.Drawing.Size(1059, 525);
             this.resultListView.TabIndex = 22;
             this.resultListView.UseCompatibleStateImageBehavior = false;
             this.resultListView.DoubleClick += new System.EventHandler(this.resultListView_DoubleClick);
@@ -508,6 +508,7 @@
             // 
             this.navigationPage1.Caption = "navigationPage1";
             this.navigationPage1.ContextMenuStrip = this.downContext;
+            this.navigationPage1.Controls.Add(this.checkPanel);
             this.navigationPage1.Controls.Add(this.addFavrourate);
             this.navigationPage1.Controls.Add(this.startReadBtn);
             this.navigationPage1.Controls.Add(this.label1);
@@ -516,7 +517,6 @@
             this.navigationPage1.Controls.Add(this.tagLabe);
             this.navigationPage1.Controls.Add(this.statusLab);
             this.navigationPage1.Controls.Add(this.comicNameLabel);
-            this.navigationPage1.Controls.Add(this.checkPanel);
             this.navigationPage1.Controls.Add(this.comicPicBox);
             this.navigationPage1.Name = "navigationPage1";
             this.navigationPage1.Size = new System.Drawing.Size(1059, 567);
@@ -550,6 +550,20 @@
             this.unChoiceTool.Size = new System.Drawing.Size(100, 22);
             this.unChoiceTool.Text = "反选";
             this.unChoiceTool.Click += new System.EventHandler(this.unChoiceTool_Click);
+            // 
+            // checkPanel
+            // 
+            this.checkPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.checkPanel.AutoScroll = true;
+            this.checkPanel.Font = new System.Drawing.Font("宋体", 10F);
+            this.checkPanel.Location = new System.Drawing.Point(3, 309);
+            this.checkPanel.Margin = new System.Windows.Forms.Padding(5);
+            this.checkPanel.Name = "checkPanel";
+            this.checkPanel.Padding = new System.Windows.Forms.Padding(3);
+            this.checkPanel.Size = new System.Drawing.Size(1053, 246);
+            this.checkPanel.TabIndex = 15;
             // 
             // addFavrourate
             // 
@@ -663,17 +677,6 @@
             this.comicNameLabel.TabIndex = 7;
             this.comicNameLabel.Text = "漫画名：";
             // 
-            // checkPanel
-            // 
-            this.checkPanel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.checkPanel.AutoScroll = true;
-            this.checkPanel.Location = new System.Drawing.Point(3, 297);
-            this.checkPanel.Name = "checkPanel";
-            this.checkPanel.Size = new System.Drawing.Size(1047, 267);
-            this.checkPanel.TabIndex = 4;
-            // 
             // comicPicBox
             // 
             this.comicPicBox.Cursor = System.Windows.Forms.Cursors.Default;
@@ -737,6 +740,7 @@
             this.manhuaduiCheck.TabIndex = 43;
             this.manhuaduiCheck.Text = "漫画堆";
             this.manhuaduiCheck.UseVisualStyleBackColor = true;
+            this.manhuaduiCheck.CheckedChanged += new System.EventHandler(this.manhuaduiCheck_CheckedChanged);
             // 
             // hanhanCheck
             // 
@@ -828,9 +832,9 @@
             this.runGif.BorderColor = System.Drawing.Color.Transparent;
             this.runGif.Cursor = System.Windows.Forms.Cursors.Arrow;
             this.runGif.Image = global::comicDownLoad.Properties.Resources.loading;
-            this.runGif.Location = new System.Drawing.Point(255, 620);
+            this.runGif.Location = new System.Drawing.Point(254, 613);
             this.runGif.Name = "runGif";
-            this.runGif.Size = new System.Drawing.Size(32, 32);
+            this.runGif.Size = new System.Drawing.Size(47, 37);
             this.runGif.TabIndex = 48;
             this.runGif.Visible = false;
             // 
@@ -878,12 +882,14 @@
             // 
             // button1
             // 
+            this.button1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.button1.Location = new System.Drawing.Point(405, 620);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 54;
             this.button1.Text = "暴力测试";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
             // MainForm
@@ -950,7 +956,6 @@
         private DevExpress.XtraBars.Navigation.NavigationPage navigationPage1;
         private DevExpress.XtraEditors.PictureEdit comicPicBox;
         private DoublebufferListview resultListView;
-        private System.Windows.Forms.Panel checkPanel;
         private System.Windows.Forms.Label comicNameLabel;
         private System.Windows.Forms.Label tagLabe;
         private System.Windows.Forms.Label statusLab;
@@ -1017,6 +1022,7 @@
         private DevExpress.XtraNavBar.NavBarItem navBarItem31;
         private DevExpress.XtraNavBar.NavBarItem navBarItem32;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.FlowLayoutPanel checkPanel;
     }
 }
 

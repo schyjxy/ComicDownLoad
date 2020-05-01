@@ -131,24 +131,33 @@ namespace comicDownLoad
         public override DownLoadComic GetDownImageList(string response)//给出某一话所有下载链接
         {
             DownLoadComic comic = new DownLoadComic();
-            Regex[] regex = new Regex[2];
-            regex[0] = new Regex(@"(sFiles|lf\d+)=""(?<key>\w+)""");
-            regex[1] = new Regex(@"sPath=""(?<path>[\w/]*)""");
-            var host = "http://comic.jmydm.com:8080/";
-            var sFile = regex[0].Match(response).Groups["key"].Value;
-            var sPath = regex[1].Match(response).Groups["path"].Value;
-            var urlList = new List<string>();
-            var sk = "kxnelimwzsb";
-            var dat = unsuan(sFile, sk);
-            string[] file = dat.Split('|');
 
-            foreach (var i in file)
+            try
             {
-                urlList.Add(host + sPath + i);
-            }
+                Regex[] regex = new Regex[2];
+                regex[0] = new Regex(@"(sFiles|lf\d+)=""(?<key>\w+)""");
+                regex[1] = new Regex(@"sPath=""(?<path>[\w/]*)""");
+                var host = "http://comic.jmydm.com:8080/";
+                var sFile = regex[0].Match(response).Groups["key"].Value;
+                var sPath = regex[1].Match(response).Groups["path"].Value;
+                var urlList = new List<string>();
+                var sk = "kxnelimwzsb";
+                var dat = unsuan(sFile, sk);
+                string[] file = dat.Split('|');
 
-            comic.Count = urlList.Count;
-            comic.ImageList = urlList;
+                foreach (var i in file)
+                {
+                    urlList.Add(host + sPath + i);
+                }
+
+                comic.Count = urlList.Count;
+                comic.ImageList = urlList;
+            }
+            catch(Exception ex)
+            {
+
+            }
+            
             return comic;
         }
 

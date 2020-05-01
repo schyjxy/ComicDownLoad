@@ -185,7 +185,7 @@ namespace comicDownLoad
                 {
                     imageList.Add(temp.Attributes["src"].Value);
                 }
-             
+
                 for (int i = 0; i < total; i++)
                 {
                     response = AnalyseTool.HttpGet(nextHtml,Encoding.UTF8);

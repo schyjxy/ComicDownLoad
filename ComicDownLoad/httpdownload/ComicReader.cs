@@ -84,48 +84,6 @@ namespace comicDownLoad
            
         }
 
-        private Image JoinImage()
-        {
-            int pos = 0;
-            int maxWidth = 0;
-            int totalHeigtht = 0;
-            Graphics graphic = null;
-            Image tempImage = null;
-            Bitmap retImage;
-            List<Image> showimageList;
-            List<string> list;
-            list = new List<string>();
-            showimageList = new List<Image>();
-
-            foreach (var fileName in FileUrl)
-            {
-                tempImage = Image.FromFile(fileName);
-                showimageList.Add(tempImage);
-                totalHeigtht = totalHeigtht + tempImage.Height;
-
-                if (tempImage.Width > maxWidth)
-                {
-                    maxWidth = tempImage.Width;
-                }
-
-                tempImage = null;
-            }
-
-            retImage = new Bitmap(maxWidth, totalHeigtht);
-            graphic = Graphics.FromImage(retImage);
-
-            foreach (Image img in showimageList)
-            {
-                graphic.DrawImage(img, 0, pos);
-                pos = pos + img.Height;
-            }
-
-            graphic.Dispose();
-            showimageList.Clear();
-            GC.Collect();
-            return retImage;
-        }
-
         public void AddFileToList(object sender, string fileName)//添加文件到文件集合
         {
             if (FileUrl == null)
@@ -215,7 +173,6 @@ namespace comicDownLoad
                 tempRect.Y = 0;
                 tempRect.Width = m_nextImage.Width;
                 tempRect.Height = Convert.ToInt32(tempRect.Width * rate);
-                //tempRect.Height = m_clientHeight - (m_imageHeight - m_posY);
             }
             else
             {
@@ -353,7 +310,7 @@ namespace comicDownLoad
                 {
                     while (FileUrl == null || FileUrl.Count < 2)
                     {
-                       // Console.WriteLine("等待中----");
+                        Thread.Sleep(1);
                     }
 
                     m_Page = 0;
@@ -439,15 +396,12 @@ namespace comicDownLoad
             if (e.Delta < 0)
             {
                 UpScroll(sum);
-                //m_posY += sum;
             }
             else
             {
                 DownScroll(sum);
-                //m_posY -= sum;
             }
 
-            //Invalidate();
         }
 
         void UpScroll(int offset)

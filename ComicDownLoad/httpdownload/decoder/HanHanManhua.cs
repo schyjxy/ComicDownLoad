@@ -79,7 +79,6 @@ namespace comicDownLoad
 
         public override DownLoadComic GetDownImageList(string response)
         {
-            var retMsg = "";
             DownLoadComic comic = new DownLoadComic();
             Regex []regex = new Regex[4];
             regex[0] = new Regex(@"id=""hdPageCount""\svalue=""(?<count>\d+)""");

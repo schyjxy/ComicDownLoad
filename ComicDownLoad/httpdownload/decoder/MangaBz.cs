@@ -7,6 +7,7 @@ using HtmlAgilityPack;
 using System.IO;
 using System.Text.RegularExpressions;
 
+
 namespace comicDownLoad
 {
     class MangaBz:PublicThing
@@ -42,6 +43,7 @@ namespace comicDownLoad
             HtmlNode node = mainNode.SelectSingleNode("//p[@class='detail-info-tip']");
             comicInfo.Author = node.SelectSingleNode("./span/a").InnerText;
             comicInfo.HasFinished = node.SelectNodes("./span")[1].SelectSingleNode("./span").InnerText;
+            comicInfo.Tag = node.SelectNodes("./span")[2].SelectSingleNode("./span").InnerText;
 
             node = mainNode.SelectSingleNode("//p[@class='detail-info-content']");
             if(node != null)
@@ -80,7 +82,7 @@ namespace comicDownLoad
             HtmlNode mainNode = GetMainNode(cateGoryStr);
 
             Queue<BasicComicInfo> queue = new Queue<BasicComicInfo>();
-            HtmlNodeCollection nodes = mainNode.SelectNodes("//div[@class='manga-i-list-item']");
+            HtmlNodeCollection nodes = mainNode.SelectNodes("//div[@class='mh-item']");
 
             if (nodes != null)
             {
@@ -88,14 +90,14 @@ namespace comicDownLoad
                 {
                     basicComicInfo = new BasicComicInfo();
                     basicComicInfo.ComicHref = host + temp.SelectSingleNode("./a").Attributes["href"].Value;
-                    basicComicInfo.ComicName = temp.SelectSingleNode("./p").InnerText;
+                    basicComicInfo.ComicName = temp.SelectSingleNode("./div/h2/a").InnerText;
                     basicComicInfo.ComicImgUrl = temp.SelectSingleNode("./a/img").Attributes["src"].Value;
                     queue.Enqueue(basicComicInfo);
                 }
             }
 
             int curIndex = 0;
-            int count = 0;
+            int count = 1;
             nodes = mainNode.SelectNodes("//div[@class='page-pagination']/ul/li");
             collect.PagesCollection = new Dictionary<string, string>();
 
@@ -105,11 +107,14 @@ namespace comicDownLoad
                 {
                     if (!collect.PagesCollection.ContainsKey(temp.InnerText))
                     {
-                        if(temp.Attributes["class"] != null)
+                        HtmlNode node = temp.SelectSingleNode("./a");
+
+                        if (node.Attributes["class"] != null)
                         {
                             curIndex = count;
                         }
-                        collect.PagesCollection.Add(temp.InnerText, host + temp.Attributes["href"].Value);
+
+                        collect.PagesCollection.Add(node.InnerText, host + node.Attributes["href"].Value);
                         count++;
                     }
                 }
@@ -117,9 +122,30 @@ namespace comicDownLoad
 
             collect.ComicTotalCount = queue.Count;
             collect.ComicQueue = queue;
+
+            if (curIndex - 1 > 0 && collect.Count > 0)
+            {
+                collect.LastPageUrl = collect.PagesCollection[(curIndex - 1).ToString()];
+            }
+            else
+            {
+                collect.LastPageUrl = collect.PagesCollection[(curIndex).ToString()];
+            }
+
+            if (curIndex + 1 < collect.PagesCollection.Count && collect.Count > 0)
+            {
+                collect.NextPageUrl = collect.PagesCollection[(curIndex + 1).ToString()];
+            }
+            else
+            {
+                collect.NextPageUrl = collect.PagesCollection[(collect.PagesCollection.Count-1).ToString()];
+            }
+
+           
             return collect;
         }
 
+    
         public override DownLoadComic GetDownImageList(string response)
         {
             DownLoadComic downLoad = new DownLoadComic();
@@ -128,18 +154,68 @@ namespace comicDownLoad
             Regex cidRegex = new Regex(@"MANGABZ_CID=(?<data>\d+)");
             Regex signRegex = new Regex(@"MANGABZ_VIEWSIGN=""(?<data>\w+)""");
             Regex dtRegex = new Regex(@"MANGABZ_VIEWSIGN_DT=""(?<data>[\w\s\-\:]*)""");
+            Regex countRegex = new Regex(@"MANGABZ_IMAGE_COUNT\s*=\s*(?<data>\d+)");
 
-            var url = urlRegex.Match(response).Groups["data"].Value;
-            var mid = midRegex.Match(response).Groups["data"].Value;
-            var cid = cidRegex.Match(response).Groups["data"].Value;
-            var sign = signRegex.Match(response).Groups["data"].Value;
-            var dt = dtRegex.Match(response).Groups["data"].Value;
+            var url = "";
+            var mid = "";
+            var cid = "";
+            var sign = "";
+            var dt = "";
+            var count = Convert.ToInt32(countRegex.Match(response).Groups["data"].Value);
 
-            var requestUrl = host +  string.Format("{0}chapterimage.ashx?cid={1}&page={2}&key=&" +
-                "_cid={1}&_mid={3}&_dt={4}&sign={5}",url, cid, 1, mid, System.Web.HttpUtility.UrlEncode(dt), sign);
+            var requestUrl = "";
+            string temp = "";
+            List<string> urlList = new List<string>();
+            urlList.Add(currentUrl);
 
-            var msg = AnalyseTool.HttpGet(requestUrl);
+            for(int i=1;i<count + 1;i++)
+            {
+                temp = currentUrl + "#ipg" + i;
+                urlList.Add(temp);
+            }
 
+            int pos = 1;
+            downLoad.ImageList = new List<string>();
+
+            for (int i = 0;i<urlList.Count;i++)
+            {
+                response = AnalyseTool.HttpGet(urlList[i]);
+                url = urlRegex.Match(response).Groups["data"].Value;
+                mid = midRegex.Match(response).Groups["data"].Value;
+                cid = cidRegex.Match(response).Groups["data"].Value;
+                sign = signRegex.Match(response).Groups["data"].Value;
+
+                requestUrl = host + string.Format("{0}chapterimage.ashx?cid={1}&page={2}&key=&" +
+               "_cid={1}&_mid={3}&_dt={4}&sign={5}", url, cid, pos++, mid, System.Web.HttpUtility.UrlEncode(dt), sign);
+
+                var msg = AnalyseTool.HttpGet(requestUrl, currentUrl);
+
+                if(msg == "")
+                {
+                    msg = AnalyseTool.HttpGet(requestUrl, currentUrl);
+                }
+
+                url = urlRegex.Match(response).Groups["data"].Value;
+
+                if (msg != null && msg.Length > 0)
+                {
+                    Microsoft.JScript.ArrayObject obj = AnalyseTool.EvalJScript(msg);
+                    int len = Convert.ToInt32(obj.length);
+
+                    for (int k = 0; k < len; k++)
+                    {
+                        string imgUrl = obj[k].ToString();
+
+                        if (downLoad.ImageList.Exists(o=> o== imgUrl) == false)
+                        {
+                            downLoad.ImageList.Add(imgUrl);
+                        }                      
+                        
+                    }
+                }
+            }
+
+            downLoad.Count = downLoad.ImageList.Count;
             return downLoad;
         }
 
@@ -149,7 +225,7 @@ namespace comicDownLoad
             HtmlNode mainNode = GetMainNode(response);
             CategoryInfo info = new CategoryInfo();
             info.ComicList = new Dictionary<string, string>(0);
-            HtmlNodeCollection htmlNodes = mainNode.SelectNodes("//div[@class='class-list']");
+            HtmlNodeCollection htmlNodes = mainNode.SelectNodes("//div[@class='class-line']");
 
             if(htmlNodes != null)
             {

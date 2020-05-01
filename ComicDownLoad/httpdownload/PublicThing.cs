@@ -64,15 +64,11 @@ namespace comicDownLoad
     public class PublicThing//公共接口
     {
         public string BackUrl { get; set; }
-        private Dictionary<string, string> m_lastedUpdate;
-        private Dictionary<string, string> m_finishedComics;
-        protected List<string> xpathList;
+        public string currentUrl = "";
 
         public PublicThing()
         {
-            m_lastedUpdate = new Dictionary<string, string>();
-            m_finishedComics = new Dictionary<string, string>();
-            xpathList = new List<string>();
+
         }
 
         public virtual CategoryCollect FindComicByCategory(string cateGoryStr)
@@ -98,19 +94,9 @@ namespace comicDownLoad
         public virtual Queue<BasicComicInfo> GetTopComic(string response)//获取热门漫画
         {
             BasicComicInfo comicInfo;
-            HtmlNode mainNode = GetMainNode(response);
-            Queue<BasicComicInfo> comic = new Queue<BasicComicInfo>();           
-            HtmlNodeCollection collection = mainNode.SelectNodes(xpathList[0]);
-
-            if (collection != null)
-            {
-                foreach (HtmlNode node in collection)
-                {
-                    
-                }
-            }
-
-            return comic;
+            comicInfo = new BasicComicInfo();
+            Queue<BasicComicInfo> queue = new Queue<BasicComicInfo>();
+            return queue;
         }
 
         public virtual void AnalyseHomePage(string message)//分析主页
@@ -138,7 +124,7 @@ namespace comicDownLoad
 
         public virtual Dictionary<string, string> GetLatestUpdate()//获取最新漫画
         {
-            return m_lastedUpdate;
+            return new Dictionary<string, string>();
         }
     }
 }
