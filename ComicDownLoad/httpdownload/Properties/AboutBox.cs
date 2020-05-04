@@ -95,5 +95,12 @@ namespace comicDownLoad.Properties
             }
         }
         #endregion
+
+        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            string url = "https://github.com/schyjxy/ComicDownLoad/releases";
+            System.Diagnostics.Process.Start("explorer.exe", url);
+        }
+    
     }
 }

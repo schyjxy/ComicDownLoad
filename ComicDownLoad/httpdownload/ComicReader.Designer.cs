@@ -38,7 +38,6 @@
             this.原始比例IToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.addMarkItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pageLabel = new System.Windows.Forms.Label();
-            this.progressBar = new CCWin.SkinControl.SkinTrackBar();
             this.menuTool = new CCWin.SkinControl.SkinMenuStrip();
             this.菜单MToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.打开ToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +51,6 @@
             this.关于BToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.tishiLabel = new System.Windows.Forms.Label();
             this.mainContext.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.progressBar)).BeginInit();
             this.menuTool.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -149,24 +147,6 @@
             this.pageLabel.Name = "pageLabel";
             this.pageLabel.Size = new System.Drawing.Size(0, 14);
             this.pageLabel.TabIndex = 2;
-            // 
-            // progressBar
-            // 
-            this.progressBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar.BackColor = System.Drawing.Color.Transparent;
-            this.progressBar.Bar = global::comicDownLoad.Properties.Resources.addHover;
-            this.progressBar.BarStyle = CCWin.SkinControl.HSLTrackBarStyle.Img;
-            this.progressBar.BaseColor = System.Drawing.Color.SeaShell;
-            this.progressBar.Location = new System.Drawing.Point(131, 625);
-            this.progressBar.Name = "progressBar";
-            this.progressBar.Size = new System.Drawing.Size(938, 45);
-            this.progressBar.TabIndex = 3;
-            this.progressBar.Track = global::comicDownLoad.Properties.Resources.bookHover;
-            this.progressBar.Value = 50;
-            this.progressBar.Visible = false;
-            this.progressBar.Scroll += new System.EventHandler(this.progressBar_Scroll);
-            this.progressBar.MouseLeave += new System.EventHandler(this.progressBar_MouseLeave);
             // 
             // menuTool
             // 
@@ -283,8 +263,8 @@
             this.关于BToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.关于BToolStripMenuItem1});
             this.关于BToolStripMenuItem.Name = "关于BToolStripMenuItem";
-            this.关于BToolStripMenuItem.Size = new System.Drawing.Size(61, 21);
-            this.关于BToolStripMenuItem.Text = "帮助(&H)";
+            this.关于BToolStripMenuItem.Size = new System.Drawing.Size(85, 21);
+            this.关于BToolStripMenuItem.Text = "检查更新(&H)";
             // 
             // 关于BToolStripMenuItem1
             // 
@@ -298,6 +278,7 @@
             this.tishiLabel.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.tishiLabel.AutoSize = true;
+            this.tishiLabel.BackColor = System.Drawing.Color.Transparent;
             this.tishiLabel.Font = new System.Drawing.Font("宋体", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(134)));
             this.tishiLabel.ForeColor = System.Drawing.SystemColors.ButtonFace;
             this.tishiLabel.Location = new System.Drawing.Point(544, 615);
@@ -315,20 +296,20 @@
             this.ClientSize = new System.Drawing.Size(1264, 682);
             this.ContextMenuStrip = this.mainContext;
             this.Controls.Add(this.tishiLabel);
-            this.Controls.Add(this.progressBar);
             this.Controls.Add(this.pageLabel);
             this.Controls.Add(this.menuTool);
             this.MainMenuStrip = this.menuTool;
             this.Name = "ComicReader";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "漫画阅读器V1.0";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ComicReader_FormClosing);
             this.Click += new System.EventHandler(this.ComicReader_Click);
             this.DoubleClick += new System.EventHandler(this.全屏ToolStripMenuItem_Click);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ComicReader_KeyDown);
             this.MouseDown += new System.Windows.Forms.MouseEventHandler(this.ComicReader_MouseDown);
             this.MouseUp += new System.Windows.Forms.MouseEventHandler(this.ComicReader_MouseUp);
+            this.Resize += new System.EventHandler(this.ComicReader_Resize);
             this.mainContext.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.progressBar)).EndInit();
             this.menuTool.ResumeLayout(false);
             this.menuTool.PerformLayout();
             this.ResumeLayout(false);
@@ -357,7 +338,6 @@
         private System.Windows.Forms.ToolStripMenuItem 清除缓存ToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 关于BToolStripMenuItem1;
         private System.Windows.Forms.Label pageLabel;
-        private CCWin.SkinControl.SkinTrackBar progressBar;
         private System.Windows.Forms.ToolStripMenuItem addMarkItem;
         private System.Windows.Forms.Label tishiLabel;
     }

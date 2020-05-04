@@ -12,18 +12,9 @@ namespace comicDownLoad
     class Resource
     {
         private Dictionary<string, string> comicDictionary;
-        private Dictionary<string, string> searchResult;
 
         public string ComicName { get; set; }
         public string ComicHref { get; set; }
-
-        public Dictionary<string, string> SearchResultURL
-        {
-            get
-            { return searchResult; }
-            set
-            { searchResult = value; }
-        }
 
         public Dictionary<string, string> CategoryCollect
         {

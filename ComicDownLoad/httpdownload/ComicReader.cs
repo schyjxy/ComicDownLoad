@@ -15,23 +15,28 @@ using System.Runtime.InteropServices;
 namespace comicDownLoad
 {
     public partial class ComicReader : Form
-    {
-      
+    {    
         private int sum;
         private int m_Page;
         private int m_clientWidth;
         private int m_clientHeight;
         private int m_posY;//滚动Y轴记录位置
         private bool isAdd;
-        private float t = 0;
+        private double time = 0;
         private double scale = 1.0;
         private Image m_showImage;
         private Image m_nextImage;
+        public delegate void ReadFinishDelegate(object sender, EventArgs args);
+        public event ReadFinishDelegate readFinishedEvent;
         private System.Windows.Forms.Timer timer;//定时器启动
 
+        private System.Timers.Timer wheelTimer;
+        object objLock = new object();
         private DateTime startTime;
         private int recordY;
+        const double wheelStep = 0.03;
         bool isPress = false;
+        bool isExit = false;
         GifBox gifBox;
 
         public ComicReader()
@@ -43,7 +48,11 @@ namespace comicDownLoad
             timer = new System.Windows.Forms.Timer();
             timer.Interval = 1;
             timer.Tick += timer_Tick;
-        }       
+
+            wheelTimer = new System.Timers.Timer();
+            wheelTimer.Interval = 35;
+            wheelTimer.Elapsed += WheelTimer_Elapsed;
+        }      
 
         public enum PaintStatusEnum
         { 
@@ -63,13 +72,15 @@ namespace comicDownLoad
 
         private void AddLoadingGif()
         {
-            gifBox = new GifBox();
+            if(gifBox == null)
+                gifBox = new GifBox();
+
             gifBox.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
             gifBox.Image = Properties.Resources.bycleLoad;
             gifBox.Width = gifBox.Image.Width;
             gifBox.Height = gifBox.Image.Height;
-            int x = (this.Width - gifBox.Image.Width) / 2;
-            int y = (this.Height - gifBox.Image.Height) / 2;
+            int x = (this.Width - gifBox.Width) / 2;
+            int y = (this.Height - gifBox.Height) / 2;
             gifBox.Location = new Point(x,y);
             this.Controls.Add(gifBox);
         }
@@ -80,8 +91,7 @@ namespace comicDownLoad
             {
                 gifBox.Image = null;
                 this.Controls.Remove(gifBox);
-            }));
-           
+            }));           
         }
 
         public void AddFileToList(object sender, string fileName)//添加文件到文件集合
@@ -94,9 +104,19 @@ namespace comicDownLoad
             FileUrl.Add(fileName);
         }
 
-        private double EaseOutQuad(double x)
+        private void ShowPage(int page)
         {
-            return 1 - (1 - x) * (1 - x);
+            pageLabel.Text = (page).ToString() + "/" + (FileUrl.Count).ToString() + "页";
+        }
+
+        private void ShowLastTip()
+        {
+            tishiLabel.Visible = true;
+        }
+
+        private void HiddenLastTip()
+        {
+            tishiLabel.Visible = false;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -127,6 +147,7 @@ namespace comicDownLoad
 
             rate = (m_imageHeight * 1.0f) / m_imageWidth;//计算图像宽高比
             rate = rate == 0.0f ? 1.0f : rate;
+            //Console.WriteLine("Y的偏移:{0}", m_posY);
 
             if (m_posY >= m_showImage.Height)//图片高度大于客户界面高度
             {
@@ -136,7 +157,7 @@ namespace comicDownLoad
                 {
                     m_showImage = m_nextImage;
                     m_Page++;
-                    pageLabel.Text = (m_Page + 1).ToString() + "/" + (FileUrl.Count).ToString() + "页";
+                    ShowPage(m_Page + 1);
                 }
                 else
                 {                
@@ -159,13 +180,16 @@ namespace comicDownLoad
                 {
                     m_nextImage = Image.FromFile(FileUrl[m_Page + 1]);
                 }
-                else
+                else//已经加载完所有
                 {
                     m_nextImage = null;
-                    if (tishiLabel.Visible == false)
+                    ShowLastTip();
+
+                    if (readFinishedEvent != null)
                     {
-                        tishiLabel.Visible = true;
+                        readFinishedEvent(this, new EventArgs());
                     }
+                    
                     return;
                 }
  
@@ -179,20 +203,26 @@ namespace comicDownLoad
                 if (m_posY < 0)
                 {
                     var pos = Math.Abs(m_posY);
+                    HiddenLastTip();
                     paintStatus = PaintStatusEnum.PaintLast;
 
-                    if (m_Page - 1 >= 0)//还有上一页
+                    if (m_Page - 1 >= 0)//还有上一页，加载上一页
                     {
-                        if (m_nextImage == null || pos >= m_nextImage.Height)//什么时候加载上一张图片
+                        if (m_nextImage == null || pos >= m_nextImage.Height)//加载完毕，加载上一张图片
                         {
-                            m_nextImage = Image.FromFile(FileUrl[--m_Page]);//上一张图片赋值
+                            if(m_nextImage == null)
+                            {
+                                m_nextImage = Image.FromFile(FileUrl[m_Page--]);//上一张图片赋值
+                            }
+                            
+                            ShowPage(m_Page);
 
                             if (Math.Abs(m_posY) >= m_nextImage.Height)//往上翻到头了，而且先画上一张
                             {
                                 m_showImage = m_nextImage;
 
                                 if (m_Page - 1 >= 0)
-                                    m_nextImage = Image.FromFile(FileUrl[--m_Page]);
+                                    m_nextImage = Image.FromFile(FileUrl[m_Page--]);
 
                                 m_posY = m_showImage.Height - m_clientHeight;
                                 srcRect.Y = m_posY;
@@ -201,7 +231,7 @@ namespace comicDownLoad
                                 paintStatus = PaintStatusEnum.PaintCurrent;//转为绘制当前             
                             }                          
                         }
-                        else
+                        else//继续加载当前页的上半部分
                         {
                             srcRect.Y = m_nextImage.Height - pos;
                             srcRect.Width = m_nextImage.Width;
@@ -210,8 +240,7 @@ namespace comicDownLoad
                             tempRect.Width = m_nextImage.Width;
                             tempRect.Height = m_clientHeight - pos;
                         }
-
-                        pageLabel.Text = (m_Page + 1).ToString() + "/" + (FileUrl.Count).ToString() + "页";
+                        ShowPage(m_Page);
                     }
                     else
                     {
@@ -286,20 +315,6 @@ namespace comicDownLoad
 
         }
 
-        private void showScrollBar_Scroll(object sender, ScrollEventArgs e)
-        {
-            if (e.NewValue > e.OldValue)
-            {
-                m_posY += e.NewValue - e.OldValue;
-                Invalidate();
-            }
-            else
-            {
-                m_posY -= e.OldValue - e.NewValue;
-                Invalidate();
-            }
-        }
-
         public void StartRead()
         {
             AddLoadingGif();
@@ -338,83 +353,121 @@ namespace comicDownLoad
 
         public bool LoadImage(string path, int currentPage)
         {
-            FileUrl = new List<string>();
-            
-            if (Directory.Exists(path) == false)
+            try
             {
-                MessageBox.Show("无法找到该漫画目录", "提示", MessageBoxButtons.OK,MessageBoxIcon.Information);
-                return false;
+                FileUrl = new List<string>();
+
+                if (Directory.Exists(path) == false)
+                {
+                    MessageBox.Show("无法找到该漫画目录", "提示", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return false;
+                }
+                var count = Directory.GetFiles(path, "*.jpg").Length;
+
+                if (count == 0)
+                {
+                    return false;
+                }
+
+                for (int i = 0; i < count; i++)
+                {
+                    FileUrl.Add(path + "\\" + i.ToString() + ".jpg");
+                }
+
+                m_Page = currentPage;
+                m_showImage = Image.FromFile(FileUrl[m_Page]);
+
+                if (m_Page + 1 <= FileUrl.Count - 1)
+                {
+                    m_nextImage = Image.FromFile(FileUrl[m_Page + 1]);
+                }
+                else
+                {
+                    m_nextImage = m_showImage;
+                }
+
+                this.Text = FileUrl[m_Page].Substring(0, FileUrl[m_Page].LastIndexOf("\\"));
+                Init();
+
+                foreach (ToolStripMenuItem t in menuTool.Items)
+                {
+                    if (t.Text.Equals("历史(&H)"))
+                        t.DropDownItems.Add(FileUrl[m_Page]);
+                }
+
+                Invalidate();
+                return true;
             }
-            var count = Directory.GetFiles(path ,"*.jpg").Length;
-            
-            if (count == 0)
+            catch(Exception ex)
             {
-                return false;
+                Console.WriteLine("LoadImage ：{0}", ex.Message);
             }
 
-            for (int i = 0; i < count; i++)
-            {
-                FileUrl.Add(path + "\\" +i.ToString() + ".jpg");
-            }
-
-            m_Page = currentPage;
-            m_showImage = Image.FromFile(FileUrl[m_Page]);
-
-            if (m_Page + 1 <= FileUrl.Count - 1)
-            {
-                m_nextImage = Image.FromFile(FileUrl[m_Page + 1]);
-            }
-            else
-            {
-                m_nextImage = m_showImage;
-            }
-
-            this.Text = FileUrl[m_Page].Substring(0, FileUrl[m_Page].LastIndexOf(".")-2);
-            Init();
-
-            foreach (ToolStripMenuItem t in menuTool.Items)
-            {         
-                if(t.Text.Equals("历史(&H)"))
-                    t.DropDownItems.Add(FileUrl[m_Page]);               
-            }
-            
-            Invalidate();
-            return true;
+            return false;
         }
 
         void Init()
         {
-            progressBar.Maximum = FileUrl.Count;
-            progressBar.Value = m_Page;
             pageLabel.Text = (m_Page+1).ToString() + "/" + (FileUrl.Count).ToString() + "页";
+        }
+
+        private void WheelTimer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            wheelTimer.Stop();
+
+            this.Invoke(new Action(() =>
+            {
+                if (isAdd)
+                {
+                    UpScroll(sum);
+                }
+                else
+                {
+                    DownScroll(sum);
+                }
+
+            }));
+            
         }
 
         void ComicReader_MouseWheel(object sender, MouseEventArgs e)
         {
-            sum = Math.Abs(e.Delta);
+            wheelTimer.Stop();
 
-            if (e.Delta < 0)
+            lock (objLock)
             {
-                UpScroll(sum);
-            }
-            else
-            {
-                DownScroll(sum);
-            }
+                int movePos = Math.Abs(e.Delta);
+                
+                Console.WriteLine("滚动长度:{0}", sum);
 
+                if (e.Delta < 0)
+                {
+                    sum = sum + movePos;
+                    isAdd = true;                  
+                }
+                else
+                {
+                    sum = movePos;
+                    isAdd = false;
+                }
+
+                wheelTimer.Start();
+            }
+            
+            
         }
 
         void UpScroll(int offset)
         { 
-            t = 0;
+            time = 0;
             sum = offset;
-            isAdd = true;           
+            isAdd = true;       
             timer.Start();
         }
 
         void DownScroll(int offset)
         { 
-            t = 0;
+            time = 0;
             sum = offset;
             isAdd = false;           
             timer.Start();
@@ -425,29 +478,55 @@ namespace comicDownLoad
             double y = Math.Sin(t * Math.PI / 2);
         }
 
+        private double EaseOutQuad(double x)
+        {
+            return 1 - Math.Pow(1 - x, 4);
+        }
+
+        private double CalIncrease()
+        {
+            double dt = (EaseOutQuad(time + wheelStep) - EaseOutQuad(time))*sum;        
+
+            if(dt < 0)
+            {
+                return 0;
+            }
+           return dt;
+        }
+
         void timer_Tick(object sender, EventArgs e)
         {
-            float dt = 0.0f;
-            dt = (sum * t + -sum * (t + 1)) / (t * t + 1);
-
-            if (isAdd)
+            Console.WriteLine("开始绘制");
+            lock (objLock)
             {
-                m_posY = m_posY - Convert.ToInt32(dt);
-            }
-            else
-            {
-                m_posY = m_posY + Convert.ToInt32(dt);
-            }
+                double increase = 0.0f;//increase 增量
+                increase = CalIncrease();
 
-            if (Math.Abs(dt) < 0.1)
-            {
-                timer.Stop();
-                sum = 0;
-            }
+                if (isAdd)
+                {
+                    m_posY = m_posY + Convert.ToInt32(increase);//计算下个顶点坐标的位置
+                }
+                else
+                {
+                    m_posY = m_posY - Convert.ToInt32(increase);
+                }
 
-            t++;
-            Invalidate();
+                //Console.WriteLine("increase：{0}, time{1}", increase, time);
+
+                if (Math.Abs(increase) < 1)
+
+                {
+                    timer.Stop();
+                    sum = 0;
+                }
+
+                time += wheelStep;
+                Invalidate();
+            }
+            
         }
+
+       
 
         private void OpenFile()
         {
@@ -474,7 +553,6 @@ namespace comicDownLoad
                 this.FormBorderStyle = FormBorderStyle.None;
                 this.WindowState = FormWindowState.Maximized;
                 this.SetVisibleCore(true);
-                progressBar.Visible = false;
                 pageLabel.Visible = false;
                 menuTool.Visible = false;
                 fullScreenTool.Checked = true;            
@@ -598,28 +676,35 @@ namespace comicDownLoad
 
         public void DeleteFiles(string str)
         {
-            DirectoryInfo fatherFolder = new DirectoryInfo(str);
-            //删除当前文件夹内文件
-            FileInfo[] files = fatherFolder.GetFiles();
-            foreach (FileInfo file in files)
+            try
             {
-                //string fileName = file.FullName.Substring((file.FullName.LastIndexOf("\\") + 1), file.FullName.Length - file.FullName.LastIndexOf("\\") - 1);
-                string fileName = file.Name;
-                try
+                DirectoryInfo fatherFolder = new DirectoryInfo(str);
+                //删除当前文件夹内文件
+                FileInfo[] files = fatherFolder.GetFiles();
+                foreach (FileInfo file in files)
                 {
-                    if (!fileName.Equals("index.dat"))
+                    //string fileName = file.FullName.Substring((file.FullName.LastIndexOf("\\") + 1), file.FullName.Length - file.FullName.LastIndexOf("\\") - 1);
+                    string fileName = file.Name;
+                    try
                     {
-                        File.Delete(file.FullName);
+                        if (!fileName.Equals("index.dat"))
+                        {
+                            File.Delete(file.FullName);
+                        }
+                    }
+                    catch (Exception ex)
+                    {
                     }
                 }
-                catch (Exception ex)
+                //递归删除子文件夹内文件
+                foreach (DirectoryInfo childFolder in fatherFolder.GetDirectories())
                 {
+                    DeleteFiles(childFolder.FullName);
                 }
             }
-            //递归删除子文件夹内文件
-            foreach (DirectoryInfo childFolder in fatherFolder.GetDirectories())
+            catch(Exception ex)
             {
-                DeleteFiles(childFolder.FullName);
+
             }
 
         }
@@ -632,24 +717,21 @@ namespace comicDownLoad
             if (folder.ShowDialog() == DialogResult.OK)
             {
                 string path = folder.SelectedPath;
-                MessageBox.Show("目录位置：" + path);
+                DirectoryInfo info = new DirectoryInfo(path);
+
+                foreach (var i in info.GetFiles())
+                {
+                    Console.WriteLine(i.FullName);
+                }
             }
         }
 
-        private void progressBar_Scroll(object sender, EventArgs e)
-        {
-            Console.WriteLine("当前页面:{0}", progressBar.Value);
-            m_Page = progressBar.Value;
-            m_posY = 0;
-            Invalidate();
-        }
 
         private void ComicReader_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
                 recordY = e.Y;
-                progressBar.Visible = false;
                 isPress = true;
                 startTime = DateTime.Now;
             }
@@ -672,11 +754,6 @@ namespace comicDownLoad
                 }
 
                 isPress = false;
-
-                if (DateTime.Now.Subtract(startTime).Seconds >= 1)
-                {
-                    progressBar.Visible = true;
-                }
             }           
            
         }
@@ -697,9 +774,29 @@ namespace comicDownLoad
 
         private void progressBar_MouseLeave(object sender, EventArgs e)
         {
-            progressBar.Visible = false;
             this.Focus();
         }
 
+        private void ComicReader_Resize(object sender, EventArgs e)
+        {
+            tishiLabel.Left = (this.Width - tishiLabel.Width)/ 2;
+
+            if(gifBox != null)
+            {
+                gifBox.Left = (this.Width - gifBox.Width) / 2;
+                gifBox.Top = (this.Height - gifBox.Height) / 2;
+            }
+           
+        }
+
+        private void ComicReader_FormClosing(object sender, FormClosingEventArgs e)//关闭窗口
+        {
+            isExit = true;
+        }
+
+        private void ComicReader_Scroll(object sender, ScrollEventArgs e)
+        {
+            Console.WriteLine("滚动了");
+        }
     }
 }

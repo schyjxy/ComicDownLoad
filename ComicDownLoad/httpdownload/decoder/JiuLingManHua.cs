@@ -90,6 +90,7 @@ namespace comicDownLoad
             }
 
             string name = "";
+            int count = 1;
 
             foreach (HtmlNode nodeTemp in collect)
             {

@@ -33,7 +33,7 @@ namespace comicDownLoad
 
         private void Notify_BalloonTipClosed(object sender, EventArgs e)
         {
-            //notify.Visible = false;
+            notify.Visible = false;
         }
 
         private void DownOnePicFinsihed(object sender, DownLoadArgs args)
@@ -155,7 +155,7 @@ namespace comicDownLoad
                     {
                         DownTask downTask = new DownTask();
                         var url = i.ComicUrl;
-                        var response = AnalyseTool.HttpGet(url);
+                        var response = AnalyseTool.HttpGet(url, url);
                         decoder.currentUrl = url;
 
                         if(response == "")
@@ -302,7 +302,6 @@ namespace comicDownLoad
                         if (File.Exists(f))
                         {
                             File.Delete(f);
-                            Console.WriteLine(f);
                         }
                         else
                         {
@@ -419,7 +418,7 @@ namespace comicDownLoad
                 downlistCollection.Add(downBox);
             }
 
-            filePanel.Controls.AddRange(itemList.ToArray());        
+            filePanel.Controls.AddRange(itemList.ToArray());
             Console.WriteLine("绘制消耗时间:{0}", DateTime.Now.Subtract(time).Milliseconds);
            
         }

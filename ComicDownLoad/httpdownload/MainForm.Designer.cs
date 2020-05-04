@@ -33,12 +33,12 @@
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.numLabel = new System.Windows.Forms.Label();
             this.comicNavBar = new DevExpress.XtraNavBar.NavBarControl();
-            this.manhuadui = new DevExpress.XtraNavBar.NavBarGroup();
-            this.navBarItem16 = new DevExpress.XtraNavBar.NavBarItem();
-            this.navBarItem17 = new DevExpress.XtraNavBar.NavBarItem();
             this.mangabzName = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem31 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem32 = new DevExpress.XtraNavBar.NavBarItem();
+            this.manhuadui = new DevExpress.XtraNavBar.NavBarGroup();
+            this.navBarItem16 = new DevExpress.XtraNavBar.NavBarItem();
+            this.navBarItem17 = new DevExpress.XtraNavBar.NavBarItem();
             this.jiu0ManHua = new DevExpress.XtraNavBar.NavBarGroup();
             this.navBarItem29 = new DevExpress.XtraNavBar.NavBarItem();
             this.navBarItem30 = new DevExpress.XtraNavBar.NavBarItem();
@@ -77,12 +77,14 @@
             this.resultListView = new comicDownLoad.DoublebufferListview();
             this.Collectcontext = new CCWin.SkinControl.SkinContextMenuStrip();
             this.reamoveCollect = new System.Windows.Forms.ToolStripMenuItem();
+            this.copyItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tabControl1 = new DevExpress.XtraTab.XtraTabControl();
             this.navigationPage1 = new DevExpress.XtraBars.Navigation.NavigationPage();
             this.downContext = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.downnLoadTool = new System.Windows.Forms.ToolStripMenuItem();
             this.fullChoiceTool = new System.Windows.Forms.ToolStripMenuItem();
             this.unChoiceTool = new System.Windows.Forms.ToolStripMenuItem();
+            this.comicPicBox = new CCWin.SkinControl.SkinPictureBox();
             this.checkPanel = new System.Windows.Forms.FlowLayoutPanel();
             this.addFavrourate = new CCWin.SkinControl.SkinButton();
             this.startReadBtn = new CCWin.SkinControl.SkinButton();
@@ -93,14 +95,11 @@
             this.tagLabe = new System.Windows.Forms.Label();
             this.statusLab = new System.Windows.Forms.Label();
             this.comicNameLabel = new System.Windows.Forms.Label();
-            this.comicPicBox = new DevExpress.XtraEditors.PictureEdit();
             this.navigationPage3 = new DevExpress.XtraBars.Navigation.NavigationPage();
             this.searchListView = new comicDownLoad.DoublebufferListview();
             this.resultLabel = new System.Windows.Forms.Label();
-            this.searchControl = new DevExpress.XtraEditors.SearchControl();
             this.manhuaduiCheck = new System.Windows.Forms.RadioButton();
             this.hanhanCheck = new System.Windows.Forms.RadioButton();
-            this.searchBtn = new System.Windows.Forms.Button();
             this.downBtn = new CCWin.SkinControl.SkinButton();
             this.homeBtn = new CCWin.SkinControl.SkinButton();
             this.lastPageBtn = new CCWin.SkinControl.SkinButton();
@@ -110,6 +109,10 @@
             this.collectBtn = new CCWin.SkinControl.SkinButton();
             this.jiulingCheck = new System.Windows.Forms.RadioButton();
             this.button1 = new System.Windows.Forms.Button();
+            this.searchControl = new CCWin.SkinControl.SkinTextBox();
+            this.searchBtn = new CCWin.SkinControl.SkinButton();
+            this.mangebzCheck = new System.Windows.Forms.RadioButton();
+            this.flowControl = new System.Windows.Forms.FlowLayoutPanel();
             ((System.ComponentModel.ISupportInitialize)(this.comicNavBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.mainFrame)).BeginInit();
             this.mainFrame.SuspendLayout();
@@ -118,10 +121,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.tabControl1)).BeginInit();
             this.navigationPage1.SuspendLayout();
             this.downContext.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.comicPicBox)).BeginInit();
             this.panel2.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.comicPicBox.Properties)).BeginInit();
             this.navigationPage3.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.searchControl.Properties)).BeginInit();
+            this.flowControl.SuspendLayout();
             this.SuspendLayout();
             // 
             // progressBar1
@@ -144,8 +147,9 @@
             // 
             // comicNavBar
             // 
-            this.comicNavBar.ActiveGroup = this.manhuadui;
+            this.comicNavBar.ActiveGroup = this.mangabzName;
             this.comicNavBar.BackColor = System.Drawing.Color.Transparent;
+            this.comicNavBar.BorderStyle = DevExpress.XtraEditors.Controls.BorderStyles.NoBorder;
             this.comicNavBar.Dock = System.Windows.Forms.DockStyle.Left;
             this.comicNavBar.Groups.AddRange(new DevExpress.XtraNavBar.NavBarGroup[] {
             this.mangabzName,
@@ -196,25 +200,6 @@
             this.comicNavBar.Text = "navBarControl1";
             this.comicNavBar.LinkClicked += new DevExpress.XtraNavBar.NavBarLinkEventHandler(this.comicNavBar_LinkClicked);
             // 
-            // manhuadui
-            // 
-            this.manhuadui.Caption = "漫画堆";
-            this.manhuadui.Expanded = true;
-            this.manhuadui.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem16),
-            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem17)});
-            this.manhuadui.Name = "manhuadui";
-            // 
-            // navBarItem16
-            // 
-            this.navBarItem16.Caption = "热门";
-            this.navBarItem16.Name = "navBarItem16";
-            // 
-            // navBarItem17
-            // 
-            this.navBarItem17.Caption = "分类";
-            this.navBarItem17.Name = "navBarItem17";
-            // 
             // mangabzName
             // 
             this.mangabzName.Caption = "mangabz";
@@ -233,6 +218,25 @@
             // 
             this.navBarItem32.Caption = "分类";
             this.navBarItem32.Name = "navBarItem32";
+            // 
+            // manhuadui
+            // 
+            this.manhuadui.Caption = "漫画堆";
+            this.manhuadui.Expanded = true;
+            this.manhuadui.ItemLinks.AddRange(new DevExpress.XtraNavBar.NavBarItemLink[] {
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem16),
+            new DevExpress.XtraNavBar.NavBarItemLink(this.navBarItem17)});
+            this.manhuadui.Name = "manhuadui";
+            // 
+            // navBarItem16
+            // 
+            this.navBarItem16.Caption = "热门";
+            this.navBarItem16.Name = "navBarItem16";
+            // 
+            // navBarItem17
+            // 
+            this.navBarItem17.Caption = "分类";
+            this.navBarItem17.Name = "navBarItem17";
             // 
             // jiu0ManHua
             // 
@@ -475,11 +479,12 @@
             this.Collectcontext.ItemRadius = 4;
             this.Collectcontext.ItemRadiusStyle = CCWin.SkinClass.RoundStyle.All;
             this.Collectcontext.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reamoveCollect});
+            this.reamoveCollect,
+            this.copyItem});
             this.Collectcontext.ItemSplitter = System.Drawing.Color.FromArgb(((int)(((byte)(60)))), ((int)(((byte)(148)))), ((int)(((byte)(212)))));
             this.Collectcontext.Name = "Collectcontext";
             this.Collectcontext.RadiusStyle = CCWin.SkinClass.RoundStyle.All;
-            this.Collectcontext.Size = new System.Drawing.Size(125, 26);
+            this.Collectcontext.Size = new System.Drawing.Size(125, 48);
             this.Collectcontext.SkinAllColor = true;
             this.Collectcontext.TitleAnamorphosis = true;
             this.Collectcontext.TitleColor = System.Drawing.Color.FromArgb(((int)(((byte)(209)))), ((int)(((byte)(228)))), ((int)(((byte)(236)))));
@@ -493,13 +498,20 @@
             this.reamoveCollect.Text = "移除收藏";
             this.reamoveCollect.Click += new System.EventHandler(this.reamoveCollect_Click);
             // 
+            // copyItem
+            // 
+            this.copyItem.Name = "copyItem";
+            this.copyItem.Size = new System.Drawing.Size(124, 22);
+            this.copyItem.Text = "复制文本";
+            this.copyItem.Click += new System.EventHandler(this.copyItem_Click);
+            // 
             // tabControl1
             // 
             this.tabControl1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.tabControl1.Location = new System.Drawing.Point(3, 7);
+            this.tabControl1.Location = new System.Drawing.Point(0, 7);
             this.tabControl1.Name = "tabControl1";
-            this.tabControl1.Size = new System.Drawing.Size(1059, 33);
+            this.tabControl1.Size = new System.Drawing.Size(1062, 26);
             this.tabControl1.TabIndex = 21;
             this.tabControl1.TabPageWidth = 50;
             this.tabControl1.SelectedPageChanged += new DevExpress.XtraTab.TabPageChangedEventHandler(this.tabControl1_SelectedPageChanged);
@@ -508,6 +520,7 @@
             // 
             this.navigationPage1.Caption = "navigationPage1";
             this.navigationPage1.ContextMenuStrip = this.downContext;
+            this.navigationPage1.Controls.Add(this.comicPicBox);
             this.navigationPage1.Controls.Add(this.checkPanel);
             this.navigationPage1.Controls.Add(this.addFavrourate);
             this.navigationPage1.Controls.Add(this.startReadBtn);
@@ -517,7 +530,6 @@
             this.navigationPage1.Controls.Add(this.tagLabe);
             this.navigationPage1.Controls.Add(this.statusLab);
             this.navigationPage1.Controls.Add(this.comicNameLabel);
-            this.navigationPage1.Controls.Add(this.comicPicBox);
             this.navigationPage1.Name = "navigationPage1";
             this.navigationPage1.Size = new System.Drawing.Size(1059, 567);
             // 
@@ -550,6 +562,17 @@
             this.unChoiceTool.Size = new System.Drawing.Size(100, 22);
             this.unChoiceTool.Text = "反选";
             this.unChoiceTool.Click += new System.EventHandler(this.unChoiceTool_Click);
+            // 
+            // comicPicBox
+            // 
+            this.comicPicBox.BackColor = System.Drawing.Color.Transparent;
+            this.comicPicBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.comicPicBox.Location = new System.Drawing.Point(19, 6);
+            this.comicPicBox.Name = "comicPicBox";
+            this.comicPicBox.Size = new System.Drawing.Size(196, 210);
+            this.comicPicBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.comicPicBox.TabIndex = 16;
+            this.comicPicBox.TabStop = false;
             // 
             // checkPanel
             // 
@@ -677,16 +700,6 @@
             this.comicNameLabel.TabIndex = 7;
             this.comicNameLabel.Text = "漫画名：";
             // 
-            // comicPicBox
-            // 
-            this.comicPicBox.Cursor = System.Windows.Forms.Cursors.Default;
-            this.comicPicBox.Location = new System.Drawing.Point(19, 10);
-            this.comicPicBox.Name = "comicPicBox";
-            this.comicPicBox.Properties.ShowCameraMenuItem = DevExpress.XtraEditors.Controls.CameraMenuItemVisibility.Auto;
-            this.comicPicBox.Properties.ZoomAccelerationFactor = 1D;
-            this.comicPicBox.Size = new System.Drawing.Size(196, 210);
-            this.comicPicBox.TabIndex = 0;
-            // 
             // navigationPage3
             // 
             this.navigationPage3.Caption = "navigationPage3";
@@ -702,7 +715,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.searchListView.Location = new System.Drawing.Point(3, 30);
             this.searchListView.Name = "searchListView";
-            this.searchListView.Size = new System.Drawing.Size(1056, 503);
+            this.searchListView.Size = new System.Drawing.Size(1056, 537);
             this.searchListView.TabIndex = 0;
             this.searchListView.UseCompatibleStateImageBehavior = false;
             this.searchListView.DoubleClick += new System.EventHandler(this.searchListView_DoubleClick);
@@ -716,25 +729,11 @@
             this.resultLabel.TabIndex = 36;
             this.resultLabel.Text = "结果数：";
             // 
-            // searchControl
-            // 
-            this.searchControl.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchControl.EditValue = "";
-            this.searchControl.Location = new System.Drawing.Point(1024, 2);
-            this.searchControl.Name = "searchControl";
-            this.searchControl.Properties.Appearance.Font = new System.Drawing.Font("微软雅黑", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.searchControl.Properties.Appearance.Options.UseFont = true;
-            this.searchControl.Properties.Buttons.AddRange(new DevExpress.XtraEditors.Controls.EditorButton[] {
-            new DevExpress.XtraEditors.Repository.ClearButton(),
-            new DevExpress.XtraEditors.Repository.SearchButton()});
-            this.searchControl.Size = new System.Drawing.Size(192, 28);
-            this.searchControl.TabIndex = 44;
-            // 
             // manhuaduiCheck
             // 
             this.manhuaduiCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.manhuaduiCheck.AutoSize = true;
-            this.manhuaduiCheck.Location = new System.Drawing.Point(875, 9);
+            this.manhuaduiCheck.Location = new System.Drawing.Point(254, 3);
             this.manhuaduiCheck.Name = "manhuaduiCheck";
             this.manhuaduiCheck.Size = new System.Drawing.Size(59, 16);
             this.manhuaduiCheck.TabIndex = 43;
@@ -746,25 +745,12 @@
             // 
             this.hanhanCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.hanhanCheck.AutoSize = true;
-            this.hanhanCheck.Checked = true;
-            this.hanhanCheck.Location = new System.Drawing.Point(795, 9);
+            this.hanhanCheck.Location = new System.Drawing.Point(319, 3);
             this.hanhanCheck.Name = "hanhanCheck";
             this.hanhanCheck.Size = new System.Drawing.Size(71, 16);
             this.hanhanCheck.TabIndex = 41;
-            this.hanhanCheck.TabStop = true;
             this.hanhanCheck.Text = "汗汗漫画";
             this.hanhanCheck.UseVisualStyleBackColor = true;
-            // 
-            // searchBtn
-            // 
-            this.searchBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.searchBtn.Location = new System.Drawing.Point(1239, 7);
-            this.searchBtn.Name = "searchBtn";
-            this.searchBtn.Size = new System.Drawing.Size(75, 23);
-            this.searchBtn.TabIndex = 40;
-            this.searchBtn.Text = "搜索";
-            this.searchBtn.UseVisualStyleBackColor = true;
-            this.searchBtn.Click += new System.EventHandler(this.searchBtn_Click);
             // 
             // downBtn
             // 
@@ -872,11 +858,10 @@
             // 
             this.jiulingCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.jiulingCheck.AutoSize = true;
-            this.jiulingCheck.Location = new System.Drawing.Point(940, 9);
+            this.jiulingCheck.Location = new System.Drawing.Point(189, 3);
             this.jiulingCheck.Name = "jiulingCheck";
             this.jiulingCheck.Size = new System.Drawing.Size(59, 16);
             this.jiulingCheck.TabIndex = 53;
-            this.jiulingCheck.TabStop = true;
             this.jiulingCheck.Text = "90漫画";
             this.jiulingCheck.UseVisualStyleBackColor = true;
             // 
@@ -892,22 +877,106 @@
             this.button1.Visible = false;
             this.button1.Click += new System.EventHandler(this.button1_Click_1);
             // 
+            // searchControl
+            // 
+            this.searchControl.BackColor = System.Drawing.Color.Transparent;
+            this.searchControl.DownBack = null;
+            this.searchControl.Icon = null;
+            this.searchControl.IconIsButton = false;
+            this.searchControl.IconMouseState = CCWin.SkinClass.ControlState.Normal;
+            this.searchControl.IsPasswordChat = '\0';
+            this.searchControl.IsSystemPasswordChar = false;
+            this.searchControl.Lines = new string[0];
+            this.searchControl.Location = new System.Drawing.Point(1030, 5);
+            this.searchControl.Margin = new System.Windows.Forms.Padding(0);
+            this.searchControl.MaxLength = 32767;
+            this.searchControl.MinimumSize = new System.Drawing.Size(28, 28);
+            this.searchControl.MouseBack = null;
+            this.searchControl.MouseState = CCWin.SkinClass.ControlState.Normal;
+            this.searchControl.Multiline = false;
+            this.searchControl.Name = "searchControl";
+            this.searchControl.NormlBack = null;
+            this.searchControl.Padding = new System.Windows.Forms.Padding(5);
+            this.searchControl.ReadOnly = false;
+            this.searchControl.ScrollBars = System.Windows.Forms.ScrollBars.None;
+            this.searchControl.Size = new System.Drawing.Size(180, 28);
+            // 
+            // 
+            // 
+            this.searchControl.SkinTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.searchControl.SkinTxt.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.searchControl.SkinTxt.Font = new System.Drawing.Font("微软雅黑", 9.75F);
+            this.searchControl.SkinTxt.Location = new System.Drawing.Point(5, 5);
+            this.searchControl.SkinTxt.Name = "BaseText";
+            this.searchControl.SkinTxt.Size = new System.Drawing.Size(170, 18);
+            this.searchControl.SkinTxt.TabIndex = 0;
+            this.searchControl.SkinTxt.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.searchControl.SkinTxt.WaterText = "输入漫画名字进行搜索";
+            this.searchControl.TabIndex = 55;
+            this.searchControl.TextAlign = System.Windows.Forms.HorizontalAlignment.Left;
+            this.searchControl.WaterColor = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
+            this.searchControl.WaterText = "输入漫画名字进行搜索";
+            this.searchControl.WordWrap = true;
+            // 
+            // searchBtn
+            // 
+            this.searchBtn.BackColor = System.Drawing.Color.Transparent;
+            this.searchBtn.BaseColor = System.Drawing.Color.White;
+            this.searchBtn.BorderColor = System.Drawing.Color.Silver;
+            this.searchBtn.ControlState = CCWin.SkinClass.ControlState.Normal;
+            this.searchBtn.DownBack = null;
+            this.searchBtn.Location = new System.Drawing.Point(1216, 6);
+            this.searchBtn.MouseBack = null;
+            this.searchBtn.MouseBaseColor = System.Drawing.Color.Silver;
+            this.searchBtn.Name = "searchBtn";
+            this.searchBtn.NormlBack = null;
+            this.searchBtn.Size = new System.Drawing.Size(75, 23);
+            this.searchBtn.TabIndex = 56;
+            this.searchBtn.Text = "搜索";
+            this.searchBtn.UseVisualStyleBackColor = false;
+            this.searchBtn.Click += new System.EventHandler(this.searchBtn_Click);
+            // 
+            // mangebzCheck
+            // 
+            this.mangebzCheck.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.mangebzCheck.AutoSize = true;
+            this.mangebzCheck.Checked = true;
+            this.mangebzCheck.Location = new System.Drawing.Point(396, 3);
+            this.mangebzCheck.Name = "mangebzCheck";
+            this.mangebzCheck.Size = new System.Drawing.Size(65, 16);
+            this.mangebzCheck.TabIndex = 57;
+            this.mangebzCheck.TabStop = true;
+            this.mangebzCheck.Tag = "";
+            this.mangebzCheck.Text = "MangaBz";
+            this.mangebzCheck.UseVisualStyleBackColor = true;
+            // 
+            // flowControl
+            // 
+            this.flowControl.BackColor = System.Drawing.Color.Transparent;
+            this.flowControl.Controls.Add(this.mangebzCheck);
+            this.flowControl.Controls.Add(this.hanhanCheck);
+            this.flowControl.Controls.Add(this.manhuaduiCheck);
+            this.flowControl.Controls.Add(this.jiulingCheck);
+            this.flowControl.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft;
+            this.flowControl.Location = new System.Drawing.Point(563, 8);
+            this.flowControl.Name = "flowControl";
+            this.flowControl.Size = new System.Drawing.Size(464, 25);
+            this.flowControl.TabIndex = 58;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(1317, 662);
+            this.Controls.Add(this.flowControl);
+            this.Controls.Add(this.searchBtn);
+            this.Controls.Add(this.searchControl);
             this.Controls.Add(this.button1);
-            this.Controls.Add(this.jiulingCheck);
             this.Controls.Add(this.collectBtn);
             this.Controls.Add(this.readerBtn);
             this.Controls.Add(this.runGif);
-            this.Controls.Add(this.searchControl);
-            this.Controls.Add(this.searchBtn);
-            this.Controls.Add(this.manhuaduiCheck);
             this.Controls.Add(this.lastBtn);
-            this.Controls.Add(this.hanhanCheck);
             this.Controls.Add(this.lastPageBtn);
             this.Controls.Add(this.homeBtn);
             this.Controls.Add(this.downBtn);
@@ -931,11 +1000,12 @@
             this.navigationPage1.ResumeLayout(false);
             this.navigationPage1.PerformLayout();
             this.downContext.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.comicPicBox)).EndInit();
             this.panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.comicPicBox.Properties)).EndInit();
             this.navigationPage3.ResumeLayout(false);
             this.navigationPage3.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.searchControl.Properties)).EndInit();
+            this.flowControl.ResumeLayout(false);
+            this.flowControl.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -954,7 +1024,6 @@
         private DevExpress.XtraBars.Navigation.NavigationPage navigationPage2;
         private DevExpress.XtraTab.XtraTabControl tabControl1;
         private DevExpress.XtraBars.Navigation.NavigationPage navigationPage1;
-        private DevExpress.XtraEditors.PictureEdit comicPicBox;
         private DoublebufferListview resultListView;
         private System.Windows.Forms.Label comicNameLabel;
         private System.Windows.Forms.Label tagLabe;
@@ -980,10 +1049,8 @@
         private CCWin.SkinControl.SkinButton downBtn;
         private DevExpress.XtraNavBar.NavBarItem navBarItem12;
         private DevExpress.XtraNavBar.NavBarItem navBarItem13;
-        private DevExpress.XtraEditors.SearchControl searchControl;
         private System.Windows.Forms.RadioButton manhuaduiCheck;
         private System.Windows.Forms.RadioButton hanhanCheck;
-        private System.Windows.Forms.Button searchBtn;
         private DevExpress.XtraNavBar.NavBarGroup k886;
         private DevExpress.XtraNavBar.NavBarItem navBarItem14;
         private DevExpress.XtraNavBar.NavBarItem navBarItem15;
@@ -1023,6 +1090,12 @@
         private DevExpress.XtraNavBar.NavBarItem navBarItem32;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.FlowLayoutPanel checkPanel;
+        private CCWin.SkinControl.SkinTextBox searchControl;
+        private CCWin.SkinControl.SkinButton searchBtn;
+        private CCWin.SkinControl.SkinPictureBox comicPicBox;
+        private System.Windows.Forms.ToolStripMenuItem copyItem;
+        private System.Windows.Forms.RadioButton mangebzCheck;
+        private System.Windows.Forms.FlowLayoutPanel flowControl;
     }
 }
 

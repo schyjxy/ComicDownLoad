@@ -18,16 +18,15 @@ namespace comicDownLoad
         SqlOperate opt;
         DownLoadForm downForm;
         Resource resource;
+        LodingWidow lodingWidow;
         ImageList showImageList;//图片集合
         PublicThing decoder;
+        ListViewItemInfo currentItem;
         bool m_exitLoad = true;//是否退出标识
-        Dictionary<string, string> downUrlDic;
 
         delegate void downloadDlegate(Queue<string> url, string comicName);
         delegate void ProcessbarDelegate(ProgressBar progressBar);
-        delegate void AddListViewItem(ListViewItem item, Image image, ListView addView);
-        delegate void AddPanel(CheckBox check);
-        private static object objLock = new object();
+        delegate void AddListViewItem(ListViewItemInfo item, Image image, ListView addView);
         private object getLock = new object();
 
         public MainForm()
@@ -56,15 +55,14 @@ namespace comicDownLoad
         public void GetImagesList(object b)//获取批量图片
         {
             var count = 0;
-            var comicDic = new Dictionary<string, string>();
             Image image = null;
             ViewStruct view = (ViewStruct)b;
             Queue<BasicComicInfo> queue = view.Queue;          
             ProcessbarDelegate progress = new ProcessbarDelegate(AddProgress);
             AddListViewItem addItem = new AddListViewItem(ListViewItemAdd);
-            ListViewItem item = null;
+            ListViewItemInfo item = null;
 
-            lock (objLock)
+            lock (getLock)
             {
                 this.Invoke(new Action(() =>
                 {
@@ -82,15 +80,11 @@ namespace comicDownLoad
                     {
                         progressBar1.Invoke(progress, progressBar1);
                         image = AnalyseTool.GetImage(i.ComicImgUrl);
-                        item = new ListViewItem();
+                        item = new ListViewItemInfo();
                         item.Text = i.ComicName;
                         item.ImageIndex = count++;
-                        this.Invoke(addItem, item, image, view.ViewAdd);
-
-                        if (comicDic.ContainsKey(i.ComicName) == false)
-                            comicDic.Add(i.ComicName, i.ComicHref);
-
-                        resource.SearchResultURL = comicDic;
+                        item.ReferUrl = i.ComicHref;
+                        this.Invoke(addItem, item, image, view.ViewAdd);                     
                     }
                     else
                     {
@@ -98,18 +92,18 @@ namespace comicDownLoad
                         m_exitLoad = true;
                         SetGifHidden();
                         return;
-                    }                 
+                    }
                 }
 
-                //Console.WriteLine("轮询图像获取:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
                 m_exitLoad = true;
                 SetGifHidden();
-
             }
-         
+
+            
+
         }
 
-        private void ListViewItemAdd(ListViewItem item, Image image, ListView addView)
+        private void ListViewItemAdd(ListViewItemInfo item, Image image, ListView addView)
         {
             if (image != null && !m_exitLoad)
             {
@@ -396,18 +390,25 @@ namespace comicDownLoad
                 return;
             }
 
+            ListViewItemInfo item = null;
+
             this.Invoke(new Action(() =>
             {
+                item = selectView.SelectedItems[0] as ListViewItemInfo;
                 mainFrame.SelectedPageIndex = 1;
-                comicNameLabel.Text = "漫画名：" + selectView.SelectedItems[0].Text;
-                url = resource.SearchResultURL[selectView.SelectedItems[0].Text];
-                resource.ComicName = selectView.SelectedItems[0].Text;
+                comicNameLabel.Text = "漫画名：" + item.Text;
+                comicPicBox.Image = showImageList.Images[selectView.SelectedItems[0].Index];
+                url = item.ReferUrl;
+                resource.ComicName = item.Text;
                 resource.ComicHref = url;
+                currentItem = item;
             }));
-                
+
+            //ShowWait(checkPanel);
             decoder = DecoderDistrution.GiveDecoder(url);
             receive = AnalyseTool.HttpGet(url);
-            
+            //RemoveWait(checkPanel);
+
             if (receive == "")
             {
                 MessageBox.Show("网络错误，获取失败");
@@ -415,17 +416,14 @@ namespace comicDownLoad
             }
 
             var comicInfo = decoder.GetComicInfo(receive);
-            downUrlDic = new Dictionary<string, string>();//存储当前漫画所有图片链接
-            downUrlDic = comicInfo.URLDictionary;
+            item.UrlDictronary = comicInfo.URLDictionary;
            
             this.Invoke(new Action(() =>
-            {
-                CheckBox check;
-                comicPicBox.Image = showImageList.Images[selectView.SelectedItems[0].Index];
+            {             
                 authorLab.Text = (comicInfo.Author == null || comicInfo.Author.Length == 0) ? "略" : comicInfo.Author;
                 tagLabe.Text = "标签：  " + comicInfo.Tag;
                 descLable.Text = "简介：" + comicInfo.Description;
-                statusLab.Text = "连载状态：" + comicInfo.HasFinished;          
+                statusLab.Text = "连载状态：" + comicInfo.HasFinished;              
                 checkPanel.Controls.Clear();
 
                 if(comicInfo.URLDictionary == null)
@@ -434,14 +432,13 @@ namespace comicDownLoad
                     return;
                 }
 
-                List<CheckBox> list = new List<CheckBox>();
+                List<Controls.CheckBoxEx> list = new List<Controls.CheckBoxEx>();
 
                 foreach (var i in comicInfo.URLDictionary)
                 {
-                    check = new CheckBox();
-                    check.AutoSize = true;
-                    check.Text = i.Key;
-                    list.Add(check);
+                    var checkBox = new Controls.CheckBoxEx();
+                    checkBox.Text = i.Key;
+                    list.Add(checkBox);
                     
                 }
                 checkPanel.Controls.AddRange(list.ToArray());
@@ -473,9 +470,9 @@ namespace comicDownLoad
             {
                 string savaPath = "";
                 DownLoadFile downFile;
-                List<DownLoadFile> downFileList;
-                
-                downFileList = new List<DownLoadFile>();
+                List<DownLoadFile> downFileList;             
+                downFileList = new List<DownLoadFile>();        
+                ListViewItemInfo item = currentItem as ListViewItemInfo;
 
                 if (downForm == null)
                 {
@@ -491,14 +488,14 @@ namespace comicDownLoad
                     savaPath = ".\\";
                 }
 
-                foreach (CheckBox i in checkPanel.Controls)
+                foreach (Controls.CheckBoxEx i in checkPanel.Controls)
                 {
                     if (i.Checked)
                     {
-                        if (downUrlDic.ContainsKey(i.Text))
+                        if (item.UrlDictronary.ContainsKey(i.FullText))
                         {
                             downFile = new DownLoadFile();
-                            downFile.ComicUrl = downUrlDic[i.Text];
+                            downFile.ComicUrl = item.UrlDictronary[i.FullText];
                             downFile.ComicName = comicNameLabel.Text.Substring(4) + i.Text;
                             downFile.SavePath = savaPath;
                             downFileList.Add(downFile);
@@ -520,7 +517,7 @@ namespace comicDownLoad
 
         private void fullChoiceTool_Click(object sender, EventArgs e)
         {
-            foreach (CheckBox i in checkPanel.Controls)
+            foreach (Controls.CheckBoxEx i in checkPanel.Controls)
             {
                 i.Checked = true;
             }
@@ -528,7 +525,7 @@ namespace comicDownLoad
 
         private void unChoiceTool_Click(object sender, EventArgs e)
         {
-            foreach (CheckBox i in checkPanel.Controls)
+            foreach (Controls.CheckBoxEx i in checkPanel.Controls)
             {
                 i.Checked = false;
             }
@@ -562,10 +559,13 @@ namespace comicDownLoad
             var response = "";
             var url = "";
             var name = "";
+
+            if (searchControl.Text == "")
+                return;
+
             var keyWord = HttpUtility.UrlEncode(searchControl.Text, Encoding.UTF8);
-            RadioButton[] radio = { manhuaduiCheck, hanhanCheck, jiulingCheck};
             
-            foreach (RadioButton r in radio)
+            foreach (RadioButton r in flowControl.Controls)
             {
                 if (r.Checked)
                 {
@@ -588,6 +588,7 @@ namespace comicDownLoad
                         case "jiulingCheck": url = "http://m.90mh.com/search/?keywords=" + keyWord; break;
                         case "veryDmCheck": url = "http://www.veryimapp.com/index.php?r=comic%2Fsearch&keyword=" + keyWord; break;
                         case "manhuaduiCheck": url = "https://www.manhuadui.com/search/?keywords=" + keyWord; break;
+                        case "mangebzCheck": url = "http://www.mangabz.com/search?title=" + keyWord;break;
                     }
 
                     response = AnalyseTool.HttpGet(url);
@@ -635,15 +636,17 @@ namespace comicDownLoad
             DownLoadFile downFile = null ;
             DownTask downTask;
             ComicReader reader = new ComicReader();
+            reader.readFinishedEvent += Reader_readFinishedEvent;
+            ListViewItemInfo item = currentItem as ListViewItemInfo;
 
-            foreach (CheckBox i in checkPanel.Controls)
+            foreach (Controls.CheckBoxEx i in checkPanel.Controls)
             {
                 if (i.Checked)
                 {
-                    if (downUrlDic.ContainsKey(i.Text))
+                    if (item.UrlDictronary.ContainsKey(i.FullText))
                     {
                         downFile = new DownLoadFile();
-                        downFile.ComicUrl = downUrlDic[i.Text];
+                        downFile.ComicUrl = item.UrlDictronary[i.FullText];
                         downFile.ComicName = comicNameLabel.Text.Substring(4) + i.Text;
                         downFile.SavePath = "temp\\";
                         break;
@@ -662,6 +665,11 @@ namespace comicDownLoad
             downTask.GetNetComic(downFile);
             reader.StartRead();
             reader.Show();
+        }
+
+        private void Reader_readFinishedEvent(object sender, EventArgs args)
+        {
+            MessageBox.Show("读完了");
         }
 
         private void addFavrourate_Click(object sender, EventArgs e)
@@ -696,47 +704,41 @@ namespace comicDownLoad
             Image image;
             SqlOperate opt = new SqlOperate();
             FileStream stream;
-            ListViewItem item = null;
+            ListViewItemInfo item = null;
             var list = opt.GetCollet();
             showImageList.Images.Clear();
             resultListView.Items.Clear();
             mainFrame.SelectedPageIndex = 0;
             m_exitLoad = true;
 
-            if (list.Count > 0)
-            {
-                resource.SearchResultURL = new Dictionary<string, string>();
-            }
-
             foreach(var i in list)
-            {               
-                item = new ListViewItem();
+            {
+                stream = new FileStream(i.ImagePath, FileMode.Open, FileAccess.Read);
+                item = new ListViewItemInfo();
                 item.Text = i.Name;
                 item.ImageIndex = count++;
-                stream = new FileStream(i.ImagePath,FileMode.Open, FileAccess.Read);
+                item.ReferUrl = i.Href;           
                 image = Image.FromStream(stream);
+                item.ConverImg = image;
+
                 showImageList.Images.Add(image);
                 resultListView.Items.Add(item);
-                stream.Close();
-
-                if (resource.SearchResultURL.ContainsKey(i.Name) == false)
-                    resource.SearchResultURL.Add(i.Name,i.Href);
+                stream.Close();         
             }
 
             resultListView.LargeImageList = showImageList;
         }
 
-        private void reamoveCollect_Click(object sender, EventArgs e)
+        private void reamoveCollect_Click(object sender, EventArgs e)//移除收藏
         {
             try
             {
                 SqlOperate.CollectStruct collectInfo;
 
-                foreach (ListViewItem i in resultListView.SelectedItems)
+                foreach (ListViewItemInfo i in resultListView.SelectedItems)
                 {
                     resultListView.Items.Remove(i);
-                    collectInfo = opt.SearchCollectByName(i.Text, resource.SearchResultURL[i.Text]);
-                    resource.SearchResultURL.Remove(i.Text);
+                    collectInfo = opt.SearchCollectByName(i.Text, i.ReferUrl);
 
                     if (showImageList.Images.Count >= i.ImageIndex)
                     {
@@ -757,7 +759,7 @@ namespace comicDownLoad
             }
         }
 
-        private void LastPage()
+        private void LastPage()//上一页
         {
             if (resource.LastPage != null)
             {
@@ -784,42 +786,67 @@ namespace comicDownLoad
             }
         }
 
-        private void ShowWait()
+        private void ShowWait(Control parentCtrl)
         {
-            LodingWidow lodingWidow = new LodingWidow();
-            lodingWidow.Location = new Point(this.Width/2, this.Height/2);
-            lodingWidow.TopLevel = false;
-            lodingWidow.Show();
-            //lodingWidow.ShowDialog();
-            this.Controls.Add(lodingWidow);
+            Invoke(new Action(() =>
+            {
+                lodingWidow = new LodingWidow();
+
+                //lodingWidow.Location = new Point((parentCtrl.Width - lodingWidow.Width) / 2 , (parentCtrl.Height - lodingWidow.Height) / 2);
+                //lodingWidow.Location = new Point(500, 500);
+                lodingWidow.BackColor = Color.Red;
+                lodingWidow.StartPosition = FormStartPosition.CenterParent;
+                lodingWidow.TopLevel = false;
+                lodingWidow.Show();
+                parentCtrl.Controls.Add(lodingWidow);
+            }));
+            
+        }
+
+        private void RemoveWait(Control parentCtrl)
+        {
+            Invoke(new Action(() =>
+            {
+                parentCtrl.Controls.Remove(lodingWidow);
+                lodingWidow = null;
+            }));
+
         }
 
         private void button1_Click_1(object sender, EventArgs e)
         {
-            //Task task = new Task(() =>
-            //{
-            //    while(true)
-            //    {
-            //        string url = "http://www.mangabz.com";
-            //        decoder = DecoderDistrution.GiveDecoder(url);
-            //        HotComic(url, decoder);
-            //        Thread.Sleep(1000 * 20);
-            //    }
+            Task task = new Task(() =>
+            {
+                while (true)
+                {
+                    string url = "http://www.mangabz.com";
+                    url = "http://m.90mh.com/update/";
+                    decoder = DecoderDistrution.GiveDecoder(url);
+                    HotComic(url, decoder);
+                    Thread.Sleep(1000 * 20);
+                }
 
-            //});
-            //task.Start();
+            });
+            task.Start();
 
             //string url = "http://www.mangabz.com/m10344/";
             //url = "http://www.mangabz.com/m115462/";
             //var response = AnalyseTool.HttpGet(url);
             //PublicThing decoder = DecoderDistrution.GiveDecoder(url);      
             //decoder.GetDownImageList(response);
-            ShowWait();
         }
 
         private void manhuaduiCheck_CheckedChanged(object sender, EventArgs e)
         {
 
+        }
+
+        private void copyItem_Click(object sender, EventArgs e)
+        {
+            if (resultListView.SelectedItems.Count > 0)
+            {
+                Clipboard.SetDataObject(resultListView.SelectedItems[0].Text);
+            }
         }
     }
 
@@ -827,5 +854,13 @@ namespace comicDownLoad
     {
         public Queue<BasicComicInfo> Queue { get; set; }
         public ListView ViewAdd { get; set; }
+    }
+
+    public class ListViewItemInfo:ListViewItem
+    {
+        public string ReferUrl { get; set; }
+        public string Title { get; set; }
+        public Image ConverImg { get; set; }
+        public Dictionary<string, string> UrlDictronary { get; set; }
     }
 }

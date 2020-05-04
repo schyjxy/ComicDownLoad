@@ -144,7 +144,13 @@ namespace comicDownLoad
             searchResult = new SearchResult();
             HtmlNode mainNode = GetMainNode(response);
             Queue<BasicComicInfo> queue = new Queue<BasicComicInfo>();
+            searchResult.SearchQueue = queue;
 
+            if (response == "")
+            {
+                return searchResult;
+            }
+           
             HtmlNodeCollection nodeCollect = mainNode.SelectNodes("//ul[@class='list_con_li update_con autoHeight']/li");
 
             if (nodeCollect != null)
@@ -184,7 +190,7 @@ namespace comicDownLoad
 
             }
 
-            searchResult.SearchQueue = queue;
+          
             int num = Convert.ToInt32(mainNode.SelectSingleNode("//em[@class='c_6']").InnerText);
             searchResult.Count = num;
             return searchResult;

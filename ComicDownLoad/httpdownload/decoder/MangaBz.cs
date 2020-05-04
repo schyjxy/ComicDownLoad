@@ -40,10 +40,22 @@ namespace comicDownLoad
             ComicInfo comicInfo = new ComicInfo();
             HtmlNode mainNode = GetMainNode(response);
 
+            HtmlNode tempNode;
             HtmlNode node = mainNode.SelectSingleNode("//p[@class='detail-info-tip']");
             comicInfo.Author = node.SelectSingleNode("./span/a").InnerText;
             comicInfo.HasFinished = node.SelectNodes("./span")[1].SelectSingleNode("./span").InnerText;
-            comicInfo.Tag = node.SelectNodes("./span")[2].SelectSingleNode("./span").InnerText;
+
+            tempNode = node.SelectNodes("./span")[2].SelectSingleNode("./span");
+
+            if (tempNode != null)
+            {
+                comicInfo.Tag = tempNode.InnerText;
+            }
+            else
+            {
+                comicInfo.Tag = "无";
+            }
+            
 
             node = mainNode.SelectSingleNode("//p[@class='detail-info-content']");
             if(node != null)
@@ -217,6 +229,15 @@ namespace comicDownLoad
 
             downLoad.Count = downLoad.ImageList.Count;
             return downLoad;
+        }
+
+        public override SearchResult GetSearchComic(string response)
+        {
+            SearchResult result = new SearchResult();
+            HtmlNode mainNode = GetMainNode(response);
+            
+
+            return result;
         }
 
         public override CategoryInfo GiveCategoryInfo(string response)

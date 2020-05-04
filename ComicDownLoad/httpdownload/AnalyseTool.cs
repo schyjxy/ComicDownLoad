@@ -13,6 +13,7 @@ using System.Drawing;
 using System.Threading;
 using Microsoft.JScript;
 using Microsoft.JScript.Vsa;
+using RestSharp;
 
 namespace comicDownLoad
 {
@@ -25,6 +26,7 @@ namespace comicDownLoad
         static object objLock = new object();
         static AutoResetEvent getUrlEvent = new AutoResetEvent(false);
         static AutoResetEvent getImageEvent = new AutoResetEvent(false);
+        static RestClient Client = new RestClient();
 
         class ImageInfo
         {
@@ -38,48 +40,86 @@ namespace comicDownLoad
             public string url;
         }
 
-        public static string HttpGet(string Url, string refer = null)//Http Get方法
+        public static string HttpGet(string Url, string refer = null)//RestSharp实现
         {
             string retString = "";
             try
             {
                 DateTime time = DateTime.Now;
-                
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
-                request.Method = "GET";
-                //request.Accept = "*/*";
-                request.UseDefaultCredentials = true;
-                request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-                request.Host = new Uri(Url).Host;
-                request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
-                request.Headers.Add("Cache-Control:max-age=0");
-                request.ServicePoint.Expect100Continue = false;
-                request.Timeout = 3000;
+                RestRequest request = new RestRequest(Url);
+                request.AddHeader("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8");
+                request.AddHeader("Accept-Encoding", "gzip, deflate");
+                request.AddHeader("Cache-Control", "max-age=0");
+                request.AddHeader("UserAgent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+                request.Timeout = 10000;
+                request.Method = Method.GET;      
 
-                if(refer != null)
-                    request.Referer = refer;
+                if (refer != null)
+                    request.AddHeader("Referer", refer);
 
-                request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
-                request.KeepAlive = true;
+                IRestResponse response = Client.Execute(request);
 
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream myResponseStream = response.GetResponseStream();
-
-                switch (response.ContentEncoding)
+                if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    case "gzip": retString = DecompressEncode.DecompressGzip(myResponseStream, Encoding.UTF8); break;
-                    case "deflate": retString = DecompressEncode.DecompressDeflate(myResponseStream, Encoding.UTF8); break;
-                    default: retString = DecompressEncode.NoCompress(myResponseStream, Encoding.UTF8); break;
+                    retString = response.Content;
+                    return retString;
                 }
+
+                
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
+                Console.WriteLine("HttpGet异常:{0}", ex.Message);
                 return retString;
             }
 
-            //Console.WriteLine("Get请求耗时:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
+            Console.WriteLine("请求完成");
             return retString;
         }
+
+        //public static string HttpGet(string Url, string refer = null)//Http Get方法
+        //{
+        //    string retString = "";
+        //    try
+        //    {
+        //        DateTime time = DateTime.Now;
+                
+        //        HttpWebRequest request = (HttpWebRequest)WebRequest.Create(Url);
+        //        request.Method = "GET";
+        //        //request.Accept = "*/*";
+        //        request.UseDefaultCredentials = true;
+        //        request.Accept = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+        //        request.Host = new Uri(Url).Host;
+        //        request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
+        //        request.Headers.Add("Cache-Control:max-age=0");
+        //        request.ServicePoint.Expect100Continue = false;
+        //        request.Timeout = 3000;
+
+        //        if(refer != null)
+        //            request.Referer = refer;
+
+        //        request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+        //        request.KeepAlive = false;
+
+        //        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //        Stream myResponseStream = response.GetResponseStream();
+
+        //        switch (response.ContentEncoding)
+        //        {
+        //            case "gzip": retString = DecompressEncode.DecompressGzip(myResponseStream, Encoding.UTF8); break;
+        //            case "deflate": retString = DecompressEncode.DecompressDeflate(myResponseStream, Encoding.UTF8); break;
+        //            default: retString = DecompressEncode.NoCompress(myResponseStream, Encoding.UTF8); break;
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine("HttpGet异常:{0}", ex.Message);
+        //        return retString;
+        //    }
+
+        //    Console.WriteLine("请求完成");
+        //    return retString;
+        //}
 
         private static void GetHttp(object obj)
         {
@@ -107,7 +147,6 @@ namespace comicDownLoad
         public static ArrayObject EvalJScript(string JScript)
         {
             VsaEngine Engine = VsaEngine.CreateEngine();
-
             ArrayObject Result = null;
             try
             {
@@ -223,41 +262,73 @@ namespace comicDownLoad
             
             getImageEvent.WaitOne();
             return imageArry;
-        }    
+        }
+
 
         public static Image GetImage(string url)
         {
             DateTime time = DateTime.Now;
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
-            request.Method = "GET";
-            request.Accept = "image/webp,image/*,*/*;q=0.8";
-            request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
-            request.Headers.Add("Cache-Control:max-age=0");
-            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
-            request.Host = new Uri(url).Host;
+            RestRequest request = new RestRequest(url);
+            request.AddHeader("Accept", "image/webp,image/*,*/*;q=0.8");
+            request.AddHeader("Accept-Encoding", "gzip, deflate");
+            request.AddHeader("Cache-Control", "max-age=0");
+            request.AddHeader("UserAgent", "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+            request.Timeout = 10000;
+            request.Method = Method.GET;
 
             try
             {
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream myResponseStream = response.GetResponseStream();
+                IRestResponse response = Client.Execute(request);
 
                 if (response.StatusCode == HttpStatusCode.OK)
                 {
-                    MemoryStream memory = new MemoryStream();
-                    myResponseStream.CopyTo(memory);
+                    MemoryStream memory = new MemoryStream(response.RawBytes);
                     Image image = Image.FromStream(memory);//Image没有释放
                     memory.Close();
-                    //Console.WriteLine("Get获取图片耗时:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
                     return image;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("GetImage函数错误:{0}", ex.Message);
             }
 
             return null;
         }
+
+        //public static Image GetImage(string url)
+        //{
+        //    DateTime time = DateTime.Now;
+        //    HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+        //    request.Method = "GET";
+        //    request.Accept = "image/webp,image/*,*/*;q=0.8";
+        //    request.Headers.Add("Accept-Encoding:gzip, deflate");//启用压缩编码
+        //    request.Headers.Add("Cache-Control:max-age=0");
+        //    request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36";
+        //    request.Host = new Uri(url).Host;
+
+        //    try
+        //    {
+        //        HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+        //        Stream myResponseStream = response.GetResponseStream();
+
+        //        if (response.StatusCode == HttpStatusCode.OK)
+        //        {
+        //            MemoryStream memory = new MemoryStream();
+        //            myResponseStream.CopyTo(memory);
+        //            Image image = Image.FromStream(memory);//Image没有释放
+        //            memory.Close();
+        //            //Console.WriteLine("Get获取图片耗时:{0} ms", DateTime.Now.Subtract(time).Milliseconds);
+        //            return image;
+        //        }
+        //    }
+        //    catch(Exception ex)
+        //    {
+        //        Console.WriteLine("GetImage函数错误:{0}", ex.Message);
+        //    }
+
+        //    return null;
+        //}
 
         public static string ReplacePunctuation(string sourceStr)
         {            

@@ -102,6 +102,7 @@ namespace comicDownLoad
                 var path = "";
                 var decoder = DecoderDistrution.GiveDecoder(downFile.ComicUrl);
                 var response = AnalyseTool.HttpGet(downFile.ComicUrl);
+                decoder.currentUrl = downFile.ComicUrl;
                 var ds = decoder.GetDownImageList(response);
                 path = DownLoadPath + "\\" + ComicName + "\\";
 

@@ -197,3 +197,6 @@ E:\同步\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.csproj.CopyComplete
 E:\同步\ComicDownLoad\httpdownload\obj\Debug\httpdownload.exe
 E:\同步\ComicDownLoad\httpdownload\obj\Debug\httpdownload.pdb
 E:\同步\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.csprojAssemblyReference.cache
+E:\同步\ComicDownLoad\httpdownload\obj\Debug\comicDownLoad.Controls.CheckBoxEx.resources
+E:\同步\ComicDownLoad\httpdownload\bin\Debug\RestSharp.dll
+E:\同步\ComicDownLoad\httpdownload\bin\Debug\RestSharp.xml
