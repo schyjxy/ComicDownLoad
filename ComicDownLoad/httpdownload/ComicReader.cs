@@ -34,7 +34,7 @@ namespace comicDownLoad
         object objLock = new object();
         private DateTime startTime;
         private int recordY;
-        const double wheelStep = 0.03;
+        const double wheelStep = 0.1;
         bool isPress = false;
         bool isExit = false;
         GifBox gifBox;

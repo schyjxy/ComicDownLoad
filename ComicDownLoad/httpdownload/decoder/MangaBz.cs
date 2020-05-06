@@ -233,10 +233,29 @@ namespace comicDownLoad
 
         public override SearchResult GetSearchComic(string response)
         {
+            BasicComicInfo comicInfo;
             SearchResult result = new SearchResult();
             HtmlNode mainNode = GetMainNode(response);
-            
+            HtmlNodeCollection nodeCollect = mainNode.SelectNodes("//div[@class='mh-item-detali']/h2/a");
+            result.SearchQueue = new Queue<BasicComicInfo>();
+            result.Count = 0;
 
+            if (nodeCollect == null)
+            {
+                return result;
+            }
+
+           foreach (HtmlNode node in nodeCollect)
+            {
+                comicInfo = new BasicComicInfo();
+                comicInfo.ComicHref = host + node.Attributes["href"].Value;
+                comicInfo.ComicImgUrl = mainNode.SelectSingleNode("//img[@class='mh-cover']").Attributes["src"].Value;
+                comicInfo.ComicName = node.Attributes["title"].Value;
+                result.SearchQueue.Enqueue(comicInfo);
+            }
+
+
+            result.Count = result.SearchQueue.Count;
             return result;
         }
 

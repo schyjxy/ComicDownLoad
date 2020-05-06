@@ -533,7 +533,11 @@ namespace comicDownLoad
 
         private void SearchComic(string response)
         {
-            var result = decoder.GetSearchComic(response);           
+            var result = decoder.GetSearchComic(response);
+            if (result == null && result.SearchQueue == null)
+            {
+                return;
+            }
 
             this.Invoke(new Action(() =>
             {
